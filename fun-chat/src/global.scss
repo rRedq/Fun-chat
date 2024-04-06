@@ -1,0 +1,31 @@
+// @import './app/utils/common.scss';
+
+@font-face {
+  font-family: 'Ashar';
+  src: url('./app/assets/fonts/Ashar.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+:root {
+  font-family: 'Ashar';
+  line-height: 1;
+  font-size: 15px;
+
+  background-color: var(--light-2);
+
+  --light-0: #f6f2f6;
+  --light-1: #e1d5d9;
+  --light-2: #b7a7ae;
+  --light-3: #58545b;
+  --light-4: #1c252c;
+  --middle-3: #767d8897;
+  --red: #e45545;
+  --green: #6d972e;
+  --blue: #0353a4;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+}

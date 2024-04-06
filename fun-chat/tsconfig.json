@@ -1,0 +1,21 @@
+{
+  "compilerOptions": {
+    "target": "es2022",
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
+    "noImplicitAny": true,
+    "skipLibCheck": true,
+    "baseUrl": "./src",
+    "paths": {
+      "@controller/*": ["app/components/controller/*"],
+      "@view/*": ["app/components/view/*"],
+      "@model/*": ["app/components/model/*"],
+      "@data/*": ["app/data/*"],
+      "@assets/*": ["app/assets/images*"],
+      "@fields/*": ["app/fields/*"],
+      "@interfaces/*": ["app/interfaces/*"],
+      "@utils/*": ["app/utils/*"]
+    }
+  }
+}
