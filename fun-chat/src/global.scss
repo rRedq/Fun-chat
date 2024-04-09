@@ -1,5 +1,3 @@
-// @import './app/utils/common.scss';
-
 @font-face {
   font-family: 'Ashar';
   src: url('./app/assets/fonts/Ashar.ttf') format('truetype');
@@ -12,7 +10,7 @@
   line-height: 1;
   font-size: 15px;
 
-  background-color: var(--light-2);
+  background-color: var(--light-1);
 
   --light-0: #f6f2f6;
   --light-1: #e1d5d9;
@@ -23,6 +21,13 @@
   --red: #e45545;
   --green: #6d972e;
   --blue: #0353a4;
+}
+.app {
+  min-height: 100vh;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 * {
