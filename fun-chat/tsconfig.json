@@ -8,14 +8,11 @@
     "skipLibCheck": true,
     "baseUrl": "./src",
     "paths": {
-      "@controller/*": ["app/components/controller/*"],
-      "@view/*": ["app/components/view/*"],
-      "@model/*": ["app/components/model/*"],
-      "@data/*": ["app/data/*"],
       "@assets/*": ["app/assets/images*"],
-      "@fields/*": ["app/fields/*"],
-      "@interfaces/*": ["app/interfaces/*"],
-      "@utils/*": ["app/utils/*"]
+      "@alltypes/*": ["app/types/*"],
+      "@utils/*": ["app/utils/*"],
+      "@components/*": ["app/components/*"],
+      "@shared/*": ["app/shared/*"]
     }
   }
 }

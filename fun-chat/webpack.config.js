@@ -30,14 +30,11 @@ const baseConfig = {
   resolve: {
     extensions: ['.ts', '.js'],
     alias: {
-      '@controller': path.resolve(__dirname, 'src/app/components/controller/'),
-      '@view': path.resolve(__dirname, 'src/app/components/view/'),
-      '@model': path.resolve(__dirname, 'src/app/components/model/'),
-      '@data': path.resolve(__dirname, 'src/app/data/'),
       '@assets': path.resolve(__dirname, 'src/app/assets/images'),
-      '@fields': path.resolve(__dirname, 'src/app/fields/'),
       '@utils': path.resolve(__dirname, 'src/app/utils/'),
-      '@interfaces': path.resolve(__dirname, 'src/app/interfaces/'),
+      '@alltypes': path.resolve(__dirname, 'src/app/types/'),
+      '@components': path.resolve(__dirname, 'src/app/components/'),
+      '@shared': path.resolve(__dirname, 'src/app/shared/'),
     },
   },
   output: {
