@@ -1,5 +1,5 @@
-import { LoginInputNames } from '@alltypes/common';
-import { AuthResponseError, AuthResponseSucces } from '@alltypes/serverResponse';
+import { LoginInputNames, UserData } from '@alltypes/common';
+import { AuthResponseError, AuthResponse } from '@alltypes/serverResponse';
 import { RemoteServer } from '@shared/web-socket';
 
 export class LoginModel {
@@ -50,18 +50,25 @@ export class LoginModel {
     return false;
   }
 
-  public async setAuth(success: (login: string) => void, fail: (str: string) => void) {
-    const userId = '1';
-    const result: AuthResponseSucces | AuthResponseError = await this.webSocket.setAuth(
-      userId,
-      this.name,
-      this.password
-    );
+  public async setAuth(success: (data: UserData) => void, fail: (str: string) => void) {
+    try {
+      const id = crypto.randomUUID();
+      const result: AuthResponse | AuthResponseError = await this.webSocket.setAuth({
+        id,
+        name: this.name,
+        password: this.password,
+      });
 
-    if (result.type === 'USER_LOGIN') {
-      success(result.payload.user.login);
-    } else {
-      fail(result.payload.error);
+      if (result.type === 'USER_LOGIN') {
+        // заменить
+        sessionStorage.setItem('auth', JSON.stringify({ id, name: this.name, password: this.password }));
+        //
+        success({ id, name: result.payload.user.login, password: this.password });
+      } else if (result.type === 'ERROR') {
+        fail(result.payload.error);
+      }
+    } catch (error) {
+      console.error(error);
     }
   }
 }

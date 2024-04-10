@@ -1,5 +1,4 @@
 import './global.scss';
-import { App } from './app/app';
+import { AppController } from '@components/app/app-controller';
 
-const app = new App();
-app.createLoginPage();
+(() => new AppController())();

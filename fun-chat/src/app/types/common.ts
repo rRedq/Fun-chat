@@ -1,3 +1,9 @@
 type LoginInputNames = 'name' | 'password';
 
-export { LoginInputNames };
+type UserData = {
+  id: string;
+  name: string;
+  password: string;
+};
+
+export { LoginInputNames, UserData };

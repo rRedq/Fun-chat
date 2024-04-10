@@ -1,13 +1,13 @@
-import { LoginInputNames } from './common';
+import { LoginInputNames, UserData } from './common';
 
 interface LoginEvents {
   'login-input': { value: string; name: LoginInputNames };
   'login-auth': { event: Event };
-  'login-auth2': { event: string };
 }
 
 interface AppEvents {
-  'app-auth': { login: string };
+  'app-auth': UserData;
+  'app-logout': { status: boolean };
 }
 
 export { LoginEvents, AppEvents };

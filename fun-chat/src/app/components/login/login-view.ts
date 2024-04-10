@@ -1,5 +1,4 @@
 import './login.scss';
-import { appendChildren } from '@utils/dom-helpers';
 import { input, form, div, button, span } from '@utils/tag-create-functions';
 import { type EventEmitter } from '@shared/event-emitter';
 import { LoginInputNames } from '@alltypes/common';
@@ -36,9 +35,8 @@ export class LoginView {
   }
 
   private createFieldCover(field: HTMLInputElement, name: LoginInputNames): void {
-    const cover = div({ className: 'login__field' });
     const error = span({ className: 'login__error' });
-    appendChildren(cover, [field, error]);
+    const cover = div({ className: 'login__field' }, field, error);
     this.form.append(cover);
     field.addEventListener('keyup', () => this.emitter.emit('login-input', { value: field.value, name }));
   }
@@ -63,19 +61,15 @@ export class LoginView {
   }
 
   public showModal(str: string): void {
-    const overlay = div({ className: 'login__overlay' });
-    const modal = div({ className: 'login__modal', textContent: str });
     const closeBtn = button({ className: 'btn', textContent: 'ok' });
-    overlay.append(modal);
-    modal.append(closeBtn);
+    const modal = div({ className: 'login__modal', textContent: str }, closeBtn);
+    const overlay = div({ className: 'login__overlay' }, modal);
     document.body.append(overlay);
 
     const timeToApearModal = 10;
     const timeToDisappearModal = 300;
 
-    setTimeout(() => {
-      modal.classList.add('login__modal-active');
-    }, timeToApearModal);
+    setTimeout(() => modal.classList.add('login__modal-active'), timeToApearModal);
 
     closeBtn.addEventListener('click', () => {
       modal.classList.remove('login__modal-active');

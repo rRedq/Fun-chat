@@ -1,5 +1,6 @@
-import { AuthResponseError, AuthResponseSucces } from '@alltypes/serverResponse';
-import { serverUrl } from './const';
+import { AuthResponseError, AuthResponse } from '@alltypes/serverResponse';
+import { UserData } from '@alltypes/common';
+import { socketDataContainer, serverUrl } from './const';
 
 export class RemoteServer {
   private webSocket = new WebSocket(serverUrl);
@@ -10,24 +11,37 @@ export class RemoteServer {
     };
   }
 
-  public setAuth(id: string, login: string, password: string): Promise<AuthResponseSucces | AuthResponseError> {
-    this.isOpen();
+  public userLogout(userData: UserData) {
+    return new Promise((resolve, reject) => {
+      if (!this.isOpen()) {
+        reject(new Error('server unavailable'));
+      }
 
-    const data = {
-      id,
-      type: 'USER_LOGIN',
-      payload: {
-        user: {
-          login,
-          password,
-        },
-      },
-    };
-    this.webSocket.send(JSON.stringify(data));
+      const data = socketDataContainer(userData, 'USER_LOGOUT');
+      this.webSocket.send(JSON.stringify(data));
 
-    return new Promise((resolve) => {
       this.webSocket.onmessage = (event) => {
-        const result: AuthResponseSucces | AuthResponseError = JSON.parse(event.data);
+        const result: AuthResponse | AuthResponseError = JSON.parse(event.data);
+        if (result.type === 'USER_LOGOUT') {
+          resolve(result);
+        } else if (result.type === 'ERROR') {
+          reject(result.payload.error);
+        }
+      };
+    });
+  }
+
+  public setAuth(userData: UserData): Promise<AuthResponse | AuthResponseError> {
+    return new Promise((resolve, reject) => {
+      if (!this.isOpen()) {
+        reject(new Error('server unavailable'));
+      }
+
+      const data = socketDataContainer(userData, 'USER_LOGIN');
+      this.webSocket.send(JSON.stringify(data));
+
+      this.webSocket.onmessage = (event) => {
+        const result: AuthResponse | AuthResponseError = JSON.parse(event.data);
         if (result.type === 'USER_LOGIN' || result.type === 'ERROR') {
           resolve(result);
         }

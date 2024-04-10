@@ -1,6 +1,6 @@
-interface AuthResponseSucces {
+interface AuthResponse {
   id: string;
-  type: 'USER_LOGIN';
+  type: 'USER_LOGIN' | 'USER_LOGOUT';
   payload: {
     user: {
       isLogined: boolean;
@@ -16,4 +16,4 @@ interface AuthResponseError {
   };
 }
 
-export { AuthResponseSucces, AuthResponseError };
+export { AuthResponse, AuthResponseError };

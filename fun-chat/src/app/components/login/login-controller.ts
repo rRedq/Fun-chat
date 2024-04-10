@@ -1,5 +1,5 @@
 import { EventEmitter } from '@shared/event-emitter';
-import { LoginInputNames } from '@alltypes/common';
+import { LoginInputNames, UserData } from '@alltypes/common';
 import { AppEvents, LoginEvents } from '@alltypes/emit-events';
 import { RemoteServer } from '@shared/web-socket';
 import { LoginModel } from './login-model';
@@ -54,8 +54,8 @@ export class LoginController extends EventEmitter<LoginEvents> {
     return this.loginView.getRoot();
   }
 
-  private removeLogin(login: string): void {
-    this.emitter.emit('app-auth', { login });
+  private removeLogin({ id, name, password }: UserData): void {
+    this.emitter.emit('app-auth', { id, name, password });
     this.subs.forEach((unsubscribe: () => void) => unsubscribe());
     this.subs.length = 0;
     this.loginView.removeLoginView();

@@ -1,0 +1,24 @@
+@import '../../../styles/common.scss';
+
+.header {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border: 1px solid var(--light-4);
+  background-color: var(--light-0);
+  font-size: 22px;
+  padding: 0 2%;
+  border-radius: 3px;
+
+  &__container {
+    width: 80%;
+    display: flex;
+  }
+  &__text {
+    flex-grow: 1;
+    &:first-child {
+      flex-grow: 3;
+    }
+  }
+}
