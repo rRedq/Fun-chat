@@ -13,16 +13,20 @@ export class ChatController {
 
   private chatView: ChatView;
 
+  private userList: UserListComtroller;
+
   constructor(webSocket: RemoteServer, emitter: EventEmitter<AppEvents>, userName: string) {
     this.webSocket = webSocket;
     const header = new HeaderView(emitter, userName, this.removeChat.bind(this)).getHeaderView();
     const footer = new FooterView().getRoot();
-    const userList = new UserListComtroller().getUserListView();
+    this.userList = new UserListComtroller(emitter, userName);
     const userDialogue = new UserDialogueComtroller().getUserListView();
-    this.chatView = new ChatView(header, userList, userDialogue, footer);
+    this.chatView = new ChatView(header, this.userList.getUserListView(), userDialogue, footer);
+    this.webSocket.getUsers();
   }
 
   private removeChat(): void {
+    this.userList.removeUserList();
     this.chatView.removeRoot();
   }
 

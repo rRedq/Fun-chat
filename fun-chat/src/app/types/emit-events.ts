@@ -1,4 +1,5 @@
 import { LoginInputNames } from './common';
+import { User } from './serverResponse';
 
 interface LoginEvents {
   'login-input': { value: string; name: LoginInputNames };
@@ -10,6 +11,11 @@ interface AppEvents {
   'app-auth-error': { error: string };
   'app-logout': { status: boolean };
   'app-logout-success': { status: boolean };
+  'app-get-users': { data: User[] };
 }
 
-export { LoginEvents, AppEvents };
+interface UserListEvents {
+  'list-input': { value: string };
+}
+
+export { LoginEvents, AppEvents, UserListEvents };

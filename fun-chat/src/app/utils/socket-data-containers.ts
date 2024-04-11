@@ -1,5 +1,5 @@
 import { UserData } from '@alltypes/common';
-import { ResponseAuthenticationList } from '@alltypes/serverResponse';
+import { RequestUsers, ResponseAuthenticationList } from '@alltypes/serverResponse';
 
 const authenticationData = ({ name, password }: UserData, type: ResponseAuthenticationList) => {
   return {
@@ -13,5 +13,16 @@ const authenticationData = ({ name, password }: UserData, type: ResponseAuthenti
     },
   };
 };
+const authenticatedUsers: RequestUsers = {
+  id: 'USER_ACTIVE',
+  type: 'USER_ACTIVE',
+  payload: null,
+};
 
-export { authenticationData };
+const unauthorizedUsers: RequestUsers = {
+  id: 'USER_INACTIVE',
+  type: 'USER_INACTIVE',
+  payload: null,
+};
+
+export { authenticationData, authenticatedUsers, unauthorizedUsers };

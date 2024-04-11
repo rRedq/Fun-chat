@@ -1,6 +1,6 @@
-import { ResponseError, AuthResponse, ResponseAuthenticationList } from '@alltypes/serverResponse';
+import { ResponseError, AuthResponse, ResponseAuthenticationList, WebSocketResponse } from '@alltypes/serverResponse';
 import { UserData } from '@alltypes/common';
-import { authenticationData } from '@utils/socket-data-containers';
+import { authenticatedUsers, authenticationData, unauthorizedUsers } from '@utils/socket-data-containers';
 import { AppEvents } from '@alltypes/emit-events';
 import { serverUrl } from './const';
 import { EventEmitter } from './event-emitter';
@@ -17,13 +17,26 @@ export class RemoteServer {
     };
   }
 
+  public async getUsers(): Promise<void> {
+    try {
+      await this.connection();
+
+      this.webSocket.send(JSON.stringify(authenticatedUsers));
+      this.webSocket.send(JSON.stringify(unauthorizedUsers));
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
   private serverResponse(data: string): void {
-    const response: AuthResponse | ResponseError = JSON.parse(data);
+    const response: WebSocketResponse = JSON.parse(data);
     console.log(response);
     if (response.id === 'USER_LOGIN') {
       this.login(response);
     } else if (response.id === 'USER_LOGOUT') {
       this.logout(response);
+    } else if (response.id === 'USER_ACTIVE' || response.id === 'USER_INACTIVE') {
+      this.emitter.emit('app-get-users', { data: response.payload.users });
     }
   }
 
@@ -43,7 +56,7 @@ export class RemoteServer {
     }
   }
 
-  public async sendAuthentication(userData: UserData, type: ResponseAuthenticationList) {
+  public async sendAuthentication(userData: UserData, type: ResponseAuthenticationList): Promise<void> {
     try {
       await this.connection();
 

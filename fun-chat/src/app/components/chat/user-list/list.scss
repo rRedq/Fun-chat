@@ -3,5 +3,49 @@
   background-color: var(--light-0);
   border: 1px solid var(--light-4);
   border-radius: 3px;
-  flex-grow: 1;
+  width: 25%;
+  font-size: 20px;
+  padding: 1%;
+
+  &__search {
+    padding: 5px;
+    border-radius: 3px;
+    width: 100%;
+    height: 25px;
+    border: 1px solid var(--light-4);
+    margin-bottom: 1%;
+  }
+
+  &__item {
+    display: flex;
+    align-items: center;
+    padding: 2%;
+    border: solid 1px var(--light-0);
+
+    &:hover {
+      cursor: pointer;
+      background-color: var(--light-1);
+      border: solid 1px var(--light-4);
+      border-radius: 3px;
+    }
+  }
+
+  &__status {
+    &-offline,
+    &-online {
+      border: 1px solid var(--light-4);
+      border-radius: 50%;
+      box-sizing: border-box;
+      height: 10px;
+      margin: 0 4% 0 0;
+      width: 10px;
+    }
+
+    &-offline {
+      background-color: var(--red);
+    }
+    &-online {
+      background-color: var(--green);
+    }
+  }
 }

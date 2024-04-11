@@ -23,13 +23,11 @@ export class AppModel {
   }
 
   public setUserState(): void {
-    // setTimeout(() => {
     const user: UserData | null = getStorage();
     if (user) {
       this.user.name = user.name;
       this.user.password = user.password;
     }
-    // }, 10);
   }
 
   public userLogout(): void {
