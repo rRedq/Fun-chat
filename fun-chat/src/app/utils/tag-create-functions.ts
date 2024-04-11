@@ -31,5 +31,11 @@ function form(props: BaseTagsProps, ...children: HTMLElement[]): HTMLFormElement
 function span(props: BaseTagsProps): HTMLSpanElement {
   return createElement<BaseTagsProps, HTMLSpanElement>('span', props);
 }
+function a(props: BaseTagsProps & { href: string }, ...children: HTMLElement[]): HTMLAnchorElement {
+  return createElement<BaseTagsProps, HTMLAnchorElement>('a', props, children);
+}
+function image(props: BaseTagsProps & { src: string; alt: string }): HTMLImageElement {
+  return createElement<BaseTagsProps, HTMLImageElement>('img', props);
+}
 
-export { div, main, button, input, table, tr, td, form, span, section };
+export { div, main, button, input, table, tr, td, form, span, section, a, image };

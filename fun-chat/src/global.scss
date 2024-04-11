@@ -30,8 +30,20 @@
   align-items: center;
 }
 
+body {
+  background-image: url('./app/assets/images/back.png');
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center center;
+}
+
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+}
+a {
+  text-decoration: none;
+  color: inherit;
+  width: 100%;
 }

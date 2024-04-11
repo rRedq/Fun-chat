@@ -20,7 +20,7 @@ export class HeaderView {
     console.log(emitter);
   }
 
-  public returnHeaderView(): HTMLElement {
+  public getHeaderView(): HTMLElement {
     return this.header;
   }
 }

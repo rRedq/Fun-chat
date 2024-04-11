@@ -9,6 +9,8 @@ export class LoginView {
 
   private form: HTMLFormElement = form({ className: 'login' });
 
+  private formCover: HTMLDivElement = div({ className: 'container' }, this.form);
+
   private nameInput: HTMLInputElement = input({
     className: 'login__input',
     type: 'text',
@@ -80,11 +82,11 @@ export class LoginView {
     });
   }
 
-  public getRoot(): HTMLFormElement {
-    return this.form;
+  public getRoot(): HTMLDivElement {
+    return this.formCover;
   }
 
   public removeLoginView(): void {
-    this.form.remove();
+    this.formCover.remove();
   }
 }

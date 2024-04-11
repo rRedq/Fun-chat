@@ -2,7 +2,7 @@ import { LoginController } from '@components/login/login-controller';
 import { RemoteServer } from '@shared/web-socket';
 import { EventEmitter } from '@shared/event-emitter';
 import { AppEvents } from '@alltypes/emit-events';
-import { Chat } from '@components/chat/chat';
+import { ChatController } from '@components/chat/main-chat/chat-controller';
 import { UserData } from '@alltypes/common';
 import { AppView } from './app-view';
 import { AppModel } from './app-model';
@@ -28,12 +28,12 @@ export class AppController extends EventEmitter<AppEvents> {
   }
 
   private createLoginPage(): void {
-    const login: HTMLFormElement = new LoginController(this.webSocket, this).getLoginViewRoot();
+    const login: HTMLDivElement = new LoginController(this.webSocket, this).getLoginViewRoot();
     this.appView.createLoginPage(login);
   }
 
   private createChatPage(login: string): void {
-    const chat: HTMLDivElement = new Chat(this.webSocket, this, login).returnChatRoot();
+    const chat: HTMLDivElement = new ChatController(this.webSocket, this, login).getChatViewRoot();
     this.appView.createChatPage(chat);
   }
 }

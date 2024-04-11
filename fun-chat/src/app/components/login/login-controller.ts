@@ -50,7 +50,7 @@ export class LoginController extends EventEmitter<LoginEvents> {
     this.loginModel.setAuth(this.removeLogin.bind(this), this.loginView.showModal);
   }
 
-  public getLoginViewRoot(): HTMLFormElement {
+  public getLoginViewRoot(): HTMLDivElement {
     return this.loginView.getRoot();
   }
 

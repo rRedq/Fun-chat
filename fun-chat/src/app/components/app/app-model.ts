@@ -18,6 +18,8 @@ export class AppModel {
         const b = JSON.parse(a);
         setTimeout(() => {
           const { id, name, password } = b;
+          // const { name, password } = b;
+          // const id = 'login';
           this.webSocket.setAuth({ id, name, password });
           success(b.name);
           this.setUserState({ id, name, password });

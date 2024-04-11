@@ -1,5 +1,5 @@
 import { LoginInputNames, UserData } from '@alltypes/common';
-import { AuthResponseError, AuthResponse } from '@alltypes/serverResponse';
+import { ResponseError, AuthResponse } from '@alltypes/serverResponse';
 import { RemoteServer } from '@shared/web-socket';
 
 export class LoginModel {
@@ -53,7 +53,8 @@ export class LoginModel {
   public async setAuth(success: (data: UserData) => void, fail: (str: string) => void) {
     try {
       const id = crypto.randomUUID();
-      const result: AuthResponse | AuthResponseError = await this.webSocket.setAuth({
+      // const id = 'login';
+      const result: AuthResponse | ResponseError = await this.webSocket.setAuth({
         id,
         name: this.name,
         password: this.password,

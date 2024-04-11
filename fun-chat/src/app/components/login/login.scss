@@ -57,3 +57,11 @@
     }
   }
 }
+
+.container {
+  width: 300px;
+  background-color: var(--light-0);
+  padding: 4% 1% 2%;
+  border: 1px solid var(--light-4);
+  border-radius: 3px;
+}

@@ -1,4 +1,4 @@
-import { AuthResponseError, AuthResponse } from '@alltypes/serverResponse';
+import { ResponseError, AuthResponse } from '@alltypes/serverResponse';
 import { UserData } from '@alltypes/common';
 import { socketDataContainer, serverUrl } from './const';
 
@@ -7,8 +7,12 @@ export class RemoteServer {
 
   constructor() {
     this.webSocket.onmessage = (event) => {
-      console.log(event.data);
+      this.serverResponse(event.data);
     };
+  }
+
+  private serverResponse(data: AuthResponse | ResponseError): void {
+    console.log(data);
   }
 
   public userLogout(userData: UserData) {
@@ -21,7 +25,7 @@ export class RemoteServer {
       this.webSocket.send(JSON.stringify(data));
 
       this.webSocket.onmessage = (event) => {
-        const result: AuthResponse | AuthResponseError = JSON.parse(event.data);
+        const result: AuthResponse | ResponseError = JSON.parse(event.data);
         if (result.type === 'USER_LOGOUT') {
           resolve(result);
         } else if (result.type === 'ERROR') {
@@ -31,7 +35,7 @@ export class RemoteServer {
     });
   }
 
-  public setAuth(userData: UserData): Promise<AuthResponse | AuthResponseError> {
+  public setAuth(userData: UserData): Promise<AuthResponse | ResponseError> {
     return new Promise((resolve, reject) => {
       if (!this.isOpen()) {
         reject(new Error('server unavailable'));
@@ -41,7 +45,7 @@ export class RemoteServer {
       this.webSocket.send(JSON.stringify(data));
 
       this.webSocket.onmessage = (event) => {
-        const result: AuthResponse | AuthResponseError = JSON.parse(event.data);
+        const result: AuthResponse | ResponseError = JSON.parse(event.data);
         if (result.type === 'USER_LOGIN' || result.type === 'ERROR') {
           resolve(result);
         }

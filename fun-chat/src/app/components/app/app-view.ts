@@ -8,7 +8,7 @@ export class AppView {
     document.body.append(this.app);
   }
 
-  public createLoginPage(login: HTMLFormElement): void {
+  public createLoginPage(login: HTMLDivElement): void {
     this.app.append(login);
   }
 

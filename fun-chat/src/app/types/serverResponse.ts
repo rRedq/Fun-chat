@@ -8,7 +8,7 @@ interface AuthResponse {
     };
   };
 }
-interface AuthResponseError {
+interface ResponseError {
   id: string;
   type: 'ERROR';
   payload: {
@@ -16,4 +16,4 @@ interface AuthResponseError {
   };
 }
 
-export { AuthResponse, AuthResponseError };
+export { AuthResponse, ResponseError };
