@@ -1,6 +1,6 @@
 interface AuthResponse {
-  id: string;
-  type: 'USER_LOGIN' | 'USER_LOGOUT';
+  id: ResponseAuthenticationList;
+  type: ResponseAuthenticationList;
   payload: {
     user: {
       isLogined: boolean;
@@ -9,11 +9,13 @@ interface AuthResponse {
   };
 }
 interface ResponseError {
-  id: string;
+  id: ResponseAuthenticationList;
   type: 'ERROR';
   payload: {
     error: string;
   };
 }
 
-export { AuthResponse, ResponseError };
+type ResponseAuthenticationList = 'USER_LOGIN' | 'USER_LOGOUT';
+
+export { AuthResponse, ResponseError, ResponseAuthenticationList };

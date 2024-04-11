@@ -1,48 +1,44 @@
 import { UserData } from '@alltypes/common';
 import { RemoteServer } from '@shared/web-socket';
+import { deleteStorageKey, getStorage } from '@utils/storage';
 
 export class AppModel {
   private webSocket: RemoteServer;
 
-  private user: UserData = { id: '', name: '', password: '' };
+  private user: UserData = { name: '', password: '' };
 
   constructor(webSocket: RemoteServer) {
     this.webSocket = webSocket;
   }
 
-  public init(success: (login: string) => void, fail: () => void): void {
-    // заменить
-    try {
-      const a = sessionStorage.getItem('auth');
-      if (a) {
-        const b = JSON.parse(a);
-        setTimeout(() => {
-          const { id, name, password } = b;
-          // const { name, password } = b;
-          // const id = 'login';
-          this.webSocket.setAuth({ id, name, password });
-          success(b.name);
-          this.setUserState({ id, name, password });
-        }, 100);
-      } else {
-        fail();
-      }
-    } catch (error) {
-      console.error(error);
+  public init(login: () => void) {
+    const user: UserData | null = getStorage();
+    if (user) {
+      this.user.name = user.name;
+      this.user.password = user.password;
+      this.webSocket.sendAuthentication(user, 'USER_LOGIN');
+    } else {
+      login();
     }
   }
 
-  public setUserState({ id, name, password }: UserData): void {
-    this.user = { id, name, password };
+  public setUserState(): void {
+    // setTimeout(() => {
+    const user: UserData | null = getStorage();
+    if (user) {
+      this.user.name = user.name;
+      this.user.password = user.password;
+    }
+    // }, 10);
   }
 
   public userLogout(): void {
-    this.webSocket
-      .userLogout({ id: this.user.id, name: this.user.name, password: this.user.password })
-      .then(() => {
-        this.user = { id: '', name: '', password: '' };
-        sessionStorage.removeItem('auth');
-      })
-      .catch((error: string) => console.error(error));
+    this.webSocket.sendAuthentication(this.user, 'USER_LOGOUT');
+  }
+
+  public removeUser(): void {
+    this.user.name = '';
+    this.user.password = '';
+    deleteStorageKey();
   }
 }

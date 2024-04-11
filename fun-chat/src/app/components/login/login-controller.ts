@@ -1,5 +1,5 @@
 import { EventEmitter } from '@shared/event-emitter';
-import { LoginInputNames, UserData } from '@alltypes/common';
+import { LoginInputNames } from '@alltypes/common';
 import { AppEvents, LoginEvents } from '@alltypes/emit-events';
 import { RemoteServer } from '@shared/web-socket';
 import { LoginModel } from './login-model';
@@ -21,12 +21,26 @@ export class LoginController extends EventEmitter<LoginEvents> {
     this.emitter = emitter;
     this.webSocket = webSocket;
     this.loginModel = new LoginModel(this.webSocket);
+    this.setSubscribers();
+  }
+
+  private setSubscribers(): void {
     this.subs.push(
-      this.subscribe('login-input', (data: { value: string; name: LoginInputNames }) =>
-        this.changeInputValue(data.name, data.value)
-      )
+      this.subscribe('login-input', (data: { value: string; name: LoginInputNames }) => {
+        this.changeInputValue(data.name, data.value);
+      })
     );
     this.subs.push(this.subscribe('login-auth', (data: { event: Event }) => this.submitForm(data.event)));
+
+    this.subs.push(
+      this.emitter.subscribe('app-auth-error', (data: { error: string }) => this.loginView.showModal(data.error))
+    );
+    this.subs.push(
+      this.emitter.subscribe('app-auth-success', () => {
+        this.loginModel.addUser();
+        this.removeLogin();
+      })
+    );
   }
 
   public changeInputValue(input: LoginInputNames, value: string): void {
@@ -47,17 +61,16 @@ export class LoginController extends EventEmitter<LoginEvents> {
 
   public submitForm(e: Event): void {
     e.preventDefault();
-    this.loginModel.setAuth(this.removeLogin.bind(this), this.loginView.showModal);
+    this.loginModel.setAuthentication();
   }
 
   public getLoginViewRoot(): HTMLDivElement {
     return this.loginView.getRoot();
   }
 
-  private removeLogin({ id, name, password }: UserData): void {
-    this.emitter.emit('app-auth', { id, name, password });
+  private removeLogin(): void {
     this.subs.forEach((unsubscribe: () => void) => unsubscribe());
-    this.subs.length = 0;
+
     this.loginView.removeLoginView();
   }
 }

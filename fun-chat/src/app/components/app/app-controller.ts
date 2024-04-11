@@ -3,12 +3,11 @@ import { RemoteServer } from '@shared/web-socket';
 import { EventEmitter } from '@shared/event-emitter';
 import { AppEvents } from '@alltypes/emit-events';
 import { ChatController } from '@components/chat/main-chat/chat-controller';
-import { UserData } from '@alltypes/common';
 import { AppView } from './app-view';
 import { AppModel } from './app-model';
 
 export class AppController extends EventEmitter<AppEvents> {
-  private webSocket = new RemoteServer();
+  private webSocket = new RemoteServer(this);
 
   private appView: AppView = new AppView();
 
@@ -16,15 +15,22 @@ export class AppController extends EventEmitter<AppEvents> {
 
   constructor() {
     super();
-    this.subscribe('app-auth', (data: UserData) => {
-      this.createChatPage(data.name);
-      this.appModel.setUserState(data);
+    this.appModel.init(this.createLoginPage.bind(this));
+    this.setSubscribers();
+  }
+
+  private setSubscribers(): void {
+    this.subscribe('app-auth-success', (data: { login: string }) => {
+      this.createChatPage(data.login);
+      this.appModel.setUserState();
     });
-    this.subscribe('app-logout', () => {
-      this.appModel.userLogout();
+
+    this.subscribe('app-logout', () => this.appModel.userLogout());
+
+    this.subscribe('app-logout-success', () => {
+      this.appModel.removeUser();
       this.createLoginPage();
     });
-    this.appModel.init(this.createChatPage.bind(this), this.createLoginPage.bind(this));
   }
 
   private createLoginPage(): void {

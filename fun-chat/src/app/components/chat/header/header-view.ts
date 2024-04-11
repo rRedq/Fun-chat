@@ -17,7 +17,6 @@ export class HeaderView {
       emitter.emit('app-logout', { status: true });
       removeChat();
     });
-    console.log(emitter);
   }
 
   public getHeaderView(): HTMLElement {

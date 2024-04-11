@@ -13,17 +13,14 @@ export class EventEmitter<T> {
     const listeners: Listener<T[K]>[] = isNull(this.events.get(eventName));
     listeners.push(handler);
 
-    return () => {
-      listeners.filter((func) => handler !== func);
-    };
+    return () => listeners.splice(listeners.indexOf(handler), 1);
   }
 
   emit<K extends keyof T>(eventName: K, data: T[K]): void {
     if (this.events.has(eventName)) {
-      const events: Listener<T[keyof T]>[] = isNull(this.events.get(eventName));
-      events.forEach((handler) => {
-        handler(data);
-      });
+      const events: Listener<T[keyof T]>[] = [...isNull(this.events.get(eventName)).reverse()];
+
+      events.forEach((handler) => handler(data));
     }
   }
 }

@@ -2,11 +2,11 @@ import './chat.scss';
 import { AppEvents } from '@alltypes/emit-events';
 import { EventEmitter } from '@shared/event-emitter';
 import { RemoteServer } from '@shared/web-socket';
-import { HeaderView } from '../header/header-view';
 import { ChatView } from './chat-view';
 import { FooterView } from '../footer/footer-view';
 import { UserListComtroller } from '../user-list/user-list-controller';
 import { UserDialogueComtroller } from '../user-dialogue/user-dialogue-controller';
+import { HeaderView } from '../header/header-view';
 
 export class ChatController {
   private webSocket: RemoteServer;
