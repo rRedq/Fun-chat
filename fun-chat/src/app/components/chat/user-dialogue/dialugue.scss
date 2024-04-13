@@ -1,7 +1,82 @@
 .dialogue {
+  display: flex;
+  flex-direction: column;
   height: 100%;
+  width: 70%;
   background-color: var(--light-0);
   border: 1px solid var(--light-4);
   border-radius: 3px;
   flex-grow: 3;
+  padding: 1%;
+  font-size: 20px;
+
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20%;
+    min-height: 35px;
+    border-bottom: 1px solid var(--light-4);
+    margin-bottom: 1%;
+  }
+  &__form {
+    display: flex;
+    align-items: center;
+    min-height: 45px;
+    border-top: 1px solid var(--light-4);
+    margin-top: 1%;
+  }
+  &__input {
+    height: 30px;
+    flex-grow: 1;
+    border-radius: 3px;
+    border: 1px solid var(--light-4);
+    padding: 1%;
+  }
+  &__status {
+    &-offline {
+      color: var(--red);
+    }
+    &-online {
+      color: var(--green);
+    }
+  }
+  &__content {
+    flex-grow: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    overflow-y: scroll;
+    gap: 10px;
+    scrollbar-width: thin;
+    padding: 1%;
+  }
+  &__cover {
+    width: 100%;
+  }
+  &__message {
+    margin-left: auto;
+    width: 60%;
+    padding: 0 1%;
+    background-color: var(--light-1);
+    border-radius: 3px;
+  }
+  &__msg-header {
+    display: flex;
+    justify-content: space-between;
+    padding: 1% 2%;
+  }
+  &__text {
+    padding: 4% 2%;
+    word-wrap: break-word;
+    background-color: var(--light-0);
+    border-radius: 3px;
+  }
+  &__msg-status {
+    display: flex;
+    justify-content: end;
+    padding: 1% 2%;
+    font-size: 16px;
+  }
 }

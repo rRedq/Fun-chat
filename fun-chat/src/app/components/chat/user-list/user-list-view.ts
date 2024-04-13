@@ -11,8 +11,8 @@ export class UserListView {
 
   private list: HTMLDivElement = div({ className: 'list' }, this.search, this.usersList);
 
-  constructor(emitter: EventEmitter<UserListEvents>) {
-    this.search.addEventListener('keyup', () => emitter.emit('list-input', { value: this.search.value }));
+  constructor(private emitter: EventEmitter<UserListEvents>) {
+    this.search.addEventListener('keyup', () => this.emitter.emit('list-input', { value: this.search.value }));
   }
 
   public setUserList(users: User[]): void {
@@ -23,7 +23,9 @@ export class UserListView {
   private setUser(user: User): HTMLDivElement {
     const status = div({ className: user.isLogined ? 'list__status-online' : 'list__status-offline' });
     const label = div({ className: 'list__name', textContent: `${user.login}` });
-    return div({ className: 'list__item' }, status, label);
+    const item = div({ className: 'list__item' }, status, label);
+    item.addEventListener('click', () => this.emitter.emit('list-user-active', { user }));
+    return item;
   }
 
   public getRoot(): HTMLDivElement {

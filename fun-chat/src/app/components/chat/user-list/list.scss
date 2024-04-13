@@ -11,9 +11,14 @@
     padding: 5px;
     border-radius: 3px;
     width: 100%;
-    height: 25px;
+    height: 30px;
     border: 1px solid var(--light-4);
-    margin-bottom: 1%;
+    margin-bottom: 2%;
+  }
+
+  &__users {
+    border-top: 1px solid var(--light-4);
+    padding-top: 1%;
   }
 
   &__item {

@@ -11,6 +11,7 @@ interface InputProps extends BaseTagsProps {
   id?: string;
   name?: string;
   placeholder?: string;
+  disabled?: boolean;
 }
 
 export { BaseTagsProps, InputProps };

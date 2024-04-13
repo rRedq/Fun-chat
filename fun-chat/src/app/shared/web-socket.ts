@@ -1,6 +1,13 @@
-import { ResponseError, AuthResponse, ResponseAuthenticationList, WebSocketResponse } from '@alltypes/serverResponse';
+import {
+  ResponseError,
+  AuthResponse,
+  ResponseAuthenticationList,
+  WebSocketResponse,
+  ResponseUsers,
+  ResponseMsg,
+} from '@alltypes/serverResponse';
 import { UserData } from '@alltypes/common';
-import { authenticatedUsers, authenticationData, unauthorizedUsers } from '@utils/socket-data-containers';
+import { authenticatedUsers, authenticationData, sendMessage, unauthorizedUsers } from '@utils/socket-data-containers';
 import { AppEvents } from '@alltypes/emit-events';
 import { serverUrl } from './const';
 import { EventEmitter } from './event-emitter';
@@ -28,6 +35,13 @@ export class RemoteServer {
     }
   }
 
+  public async sendMessage(msg: string, receiver: string): Promise<void> {
+    const isConnect = await this.isConnection();
+    if (!isConnect) return;
+    const data = sendMessage(receiver, msg);
+    this.webSocket.send(JSON.stringify(data));
+  }
+
   private serverResponse(data: string): void {
     const response: WebSocketResponse = JSON.parse(data);
     console.log(response);
@@ -36,7 +50,25 @@ export class RemoteServer {
     } else if (response.id === 'USER_LOGOUT') {
       this.logout(response);
     } else if (response.id === 'USER_ACTIVE' || response.id === 'USER_INACTIVE') {
+      this.users(response);
+    } else if (response.id === 'MSG_SEND') {
+      this.message(response);
+    }
+  }
+
+  private users(response: ResponseUsers | ResponseError) {
+    if (response.type === 'USER_ACTIVE' || response.type === 'USER_INACTIVE') {
       this.emitter.emit('app-get-users', { data: response.payload.users });
+    } else if (response.type === 'ERROR') {
+      console.error(response.payload.error);
+    }
+  }
+
+  private message(response: ResponseMsg | ResponseError) {
+    if (response.type === 'MSG_SEND') {
+      this.emitter.emit('socket-msg', { message: response.payload.message });
+    } else if (response.type === 'ERROR') {
+      console.error(response.payload.error);
     }
   }
 
@@ -64,6 +96,15 @@ export class RemoteServer {
       this.webSocket.send(JSON.stringify(data));
     } catch (error) {
       console.error(error);
+    }
+  }
+
+  private async isConnection(): Promise<boolean> {
+    try {
+      return await this.connection();
+    } catch (error) {
+      console.error(error);
+      return false;
     }
   }
 

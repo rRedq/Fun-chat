@@ -1,11 +1,11 @@
-import { AppEvents, UserListEvents } from '@alltypes/emit-events';
+import { AppEvents, ChatEvents, UserListEvents } from '@alltypes/emit-events';
 import { EventEmitter } from '@shared/event-emitter';
 import { User } from '@alltypes/serverResponse';
 import { UserListView } from './user-list-view';
 import { UserListModel } from './user-list-model';
 
 export class UserListComtroller extends EventEmitter<UserListEvents> {
-  private view: UserListView = new UserListView(this);
+  private view: UserListView;
 
   private model: UserListModel = new UserListModel();
 
@@ -13,9 +13,11 @@ export class UserListComtroller extends EventEmitter<UserListEvents> {
 
   constructor(
     private emitter: EventEmitter<AppEvents>,
-    private userName: string
+    private userName: string,
+    private chatEmitter: EventEmitter<ChatEvents>
   ) {
     super();
+    this.view = new UserListView(this);
     this.setSubscribers();
   }
 
@@ -27,6 +29,9 @@ export class UserListComtroller extends EventEmitter<UserListEvents> {
     );
     this.subs.push(
       this.subscribe('list-input', ({ value }) => this.model.search(value, this.view.setUserList.bind(this.view)))
+    );
+    this.subs.push(
+      this.subscribe('list-user-active', ({ user }) => this.chatEmitter.emit('chat-conversation', { user }))
     );
   }
 

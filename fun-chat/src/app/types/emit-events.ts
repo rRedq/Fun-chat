@@ -1,5 +1,5 @@
 import { LoginInputNames } from './common';
-import { User } from './serverResponse';
+import { Message, User } from './serverResponse';
 
 interface LoginEvents {
   'login-input': { value: string; name: LoginInputNames };
@@ -12,10 +12,17 @@ interface AppEvents {
   'app-logout': { status: boolean };
   'app-logout-success': { status: boolean };
   'app-get-users': { data: User[] };
+  'socket-msg': { message: Message };
 }
 
 interface UserListEvents {
   'list-input': { value: string };
+  'list-user-active': { user: User };
 }
 
-export { LoginEvents, AppEvents, UserListEvents };
+interface ChatEvents {
+  'chat-conversation': { user: User };
+  'chat-msg': { login: string; text: string };
+}
+
+export { LoginEvents, AppEvents, UserListEvents, ChatEvents };

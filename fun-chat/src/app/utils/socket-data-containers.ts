@@ -1,5 +1,5 @@
 import { UserData } from '@alltypes/common';
-import { RequestUsers, ResponseAuthenticationList } from '@alltypes/serverResponse';
+import { RequestMsg, RequestUsers, ResponseAuthenticationList } from '@alltypes/serverResponse';
 
 const authenticationData = ({ name, password }: UserData, type: ResponseAuthenticationList) => {
   return {
@@ -25,4 +25,17 @@ const unauthorizedUsers: RequestUsers = {
   payload: null,
 };
 
-export { authenticationData, authenticatedUsers, unauthorizedUsers };
+const sendMessage = (message: string, receiver: string): RequestMsg => {
+  return {
+    id: 'MSG_SEND',
+    type: 'MSG_SEND',
+    payload: {
+      message: {
+        to: message,
+        text: receiver,
+      },
+    },
+  };
+};
+
+export { authenticationData, authenticatedUsers, unauthorizedUsers, sendMessage };
