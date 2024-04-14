@@ -1,6 +1,7 @@
 import { LoginInputNames } from '@alltypes/common';
-import { RemoteServer } from '@shared/web-socket';
+import { RemoteServer } from 'app/web-socket.ts/web-socket';
 import { setStorage } from '@utils/storage';
+import { sendAuthentication } from '../../web-socket.ts/socket-actions';
 
 export class LoginModel {
   private name = '';
@@ -51,7 +52,7 @@ export class LoginModel {
   }
 
   public setAuthentication(): void {
-    this.webSocket.sendAuthentication({ name: this.name, password: this.password }, 'USER_LOGIN');
+    sendAuthentication({ name: this.name, password: this.password }, 'USER_LOGIN');
   }
 
   public addUser(): void {
@@ -59,6 +60,6 @@ export class LoginModel {
   }
 
   public logout(): void {
-    this.webSocket.sendAuthentication({ name: this.name, password: this.password }, 'USER_LOGOUT');
+    sendAuthentication({ name: this.name, password: this.password }, 'USER_LOGOUT');
   }
 }

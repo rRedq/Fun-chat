@@ -5,7 +5,7 @@ type Listener<T> = (data: T) => void;
 export class EventEmitter<T> {
   private events = new Map<keyof T, Listener<T[keyof T]>[]>();
 
-  subscribe<K extends keyof T>(eventName: K, handler: Listener<T[K]>): () => void {
+  public subscribe<K extends keyof T>(eventName: K, handler: Listener<T[K]>): () => void {
     if (!this.events.has(eventName)) {
       this.events.set(eventName, []);
     }
@@ -16,7 +16,7 @@ export class EventEmitter<T> {
     return () => listeners.splice(listeners.indexOf(handler), 1);
   }
 
-  emit<K extends keyof T>(eventName: K, data: T[K]): void {
+  public emit<K extends keyof T>(eventName: K, data: T[K]): void {
     if (this.events.has(eventName)) {
       const events: Listener<T[keyof T]>[] = [...isNull(this.events.get(eventName)).reverse()];
 

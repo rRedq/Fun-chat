@@ -1,0 +1,74 @@
+import { WebSocketResponse } from '@alltypes/serverResponse';
+import {
+  logIn,
+  logOut,
+  receiveMessage,
+  sendMessage,
+  getUsers,
+  messageHistoryResponse,
+  messageIsRead,
+} from './socket-responses';
+
+export class RemoteServer {
+  private webSocket: WebSocket;
+
+  constructor(url: string) {
+    this.webSocket = new WebSocket(url);
+    this.webSocket.onmessage = (event) => {
+      this.serverResponse(event.data);
+    };
+  }
+
+  public async serverRequest(data: string): Promise<void> {
+    const isConnect = await this.isConnection();
+    if (!isConnect) return;
+    this.webSocket.send(data);
+  }
+
+  private serverResponse(data: string): void {
+    const response: WebSocketResponse = JSON.parse(data);
+    console.log(response);
+    if (response.type === 'USER_LOGIN') {
+      logIn(response);
+    } else if (response.type === 'USER_LOGOUT') {
+      logOut(response);
+    } else if (response.type === 'USER_ACTIVE' || response.type === 'USER_INACTIVE') {
+      getUsers(response);
+    } else if (response.type === 'MSG_SEND') {
+      if (response.id === 'MSG_SEND') {
+        sendMessage(response);
+      } else {
+        receiveMessage(response);
+      }
+    } else if (response.id === 'MSG_HISTORY') {
+      messageHistoryResponse(response);
+    } else if (response.type === 'MSG_READ') {
+      messageIsRead(response);
+    } else if (response.type === 'ERROR') {
+      console.error(response.type, response.payload.error);
+    }
+  }
+
+  private async isConnection(): Promise<boolean> {
+    try {
+      return await this.connection();
+    } catch (error) {
+      console.error(error);
+      return false;
+    }
+  }
+
+  private connection(): Promise<boolean> {
+    return new Promise((resolve, reject) => {
+      const interval = setInterval(() => {
+        if (this.webSocket.readyState === WebSocket.OPEN) {
+          clearInterval(interval);
+          resolve(true);
+        }
+      });
+      this.webSocket.onerror = () => {
+        reject(new Error('server unavailable'));
+      };
+    });
+  }
+}

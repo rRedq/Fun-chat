@@ -12,8 +12,13 @@ interface AppEvents {
   'app-logout': { status: boolean };
   'app-logout-success': { status: boolean };
   'app-get-users': { data: User[] };
-  'socket-msg': { message: Message };
+  // 'socket-msg': { message: Message };
+  'msg-send': { message: Message };
+  'msg-receive': { message: Message };
+  'response-messeges': { messages: Message[] };
+  'msg-read': { id: string; isReaded: boolean };
 }
+// Переписать на request-msg / response-auth...
 
 interface UserListEvents {
   'list-input': { value: string };
@@ -22,7 +27,8 @@ interface UserListEvents {
 
 interface ChatEvents {
   'chat-conversation': { user: User };
-  'chat-msg': { login: string; text: string };
+  'chat-msg': { text: string };
+  'chat-change-read-status': { status: boolean };
 }
 
 export { LoginEvents, AppEvents, UserListEvents, ChatEvents };

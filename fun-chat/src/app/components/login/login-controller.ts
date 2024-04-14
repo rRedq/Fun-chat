@@ -1,7 +1,7 @@
 import { EventEmitter } from '@shared/event-emitter';
 import { LoginInputNames } from '@alltypes/common';
 import { AppEvents, LoginEvents } from '@alltypes/emit-events';
-import { RemoteServer } from '@shared/web-socket';
+import { RemoteServer } from 'app/web-socket.ts/web-socket';
 import { LoginModel } from './login-model';
 import { LoginView } from './login-view';
 

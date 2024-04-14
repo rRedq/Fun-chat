@@ -1,6 +1,7 @@
 import { UserData } from '@alltypes/common';
-import { RemoteServer } from '@shared/web-socket';
+import { RemoteServer } from 'app/web-socket.ts/web-socket';
 import { deleteStorageKey, getStorage } from '@utils/storage';
+import { sendAuthentication } from '../../web-socket.ts/socket-actions';
 
 export class AppModel {
   private webSocket: RemoteServer;
@@ -16,7 +17,7 @@ export class AppModel {
     if (user) {
       this.user.name = user.name;
       this.user.password = user.password;
-      this.webSocket.sendAuthentication(user, 'USER_LOGIN');
+      sendAuthentication(user, 'USER_LOGIN');
     } else {
       login();
     }
@@ -31,7 +32,7 @@ export class AppModel {
   }
 
   public userLogout(): void {
-    this.webSocket.sendAuthentication(this.user, 'USER_LOGOUT');
+    sendAuthentication(this.user, 'USER_LOGOUT');
   }
 
   public removeUser(): void {

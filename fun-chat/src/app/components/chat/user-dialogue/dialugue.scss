@@ -55,12 +55,20 @@
   &__cover {
     width: 100%;
   }
-  &__message {
-    margin-left: auto;
+  &__message-to,
+  &__message-from {
     width: 60%;
     padding: 0 1%;
     background-color: var(--light-1);
     border-radius: 3px;
+  }
+  &__message {
+    &-from {
+      margin-right: auto;
+    }
+    &-to {
+      margin-left: auto;
+    }
   }
   &__msg-header {
     display: flex;

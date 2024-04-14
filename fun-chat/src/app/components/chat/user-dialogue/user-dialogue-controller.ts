@@ -1,39 +1,48 @@
 import { AppEvents, ChatEvents } from '@alltypes/emit-events';
 import { EventEmitter } from '@shared/event-emitter';
-import { RemoteServer } from '@shared/web-socket';
+import { RemoteServer } from 'app/web-socket.ts/web-socket';
 import { UserDialogueView } from './user-dialogue-view';
 import { UserDialogueModel } from './user-dialogue-model';
 
 export class UserDialogueComtroller {
   private view: UserDialogueView;
 
-  private model: UserDialogueModel = new UserDialogueModel();
+  private model: UserDialogueModel;
 
   private subs: (() => void)[] = [];
 
   constructor(
     private emitter: EventEmitter<AppEvents>,
     private chatEmitter: EventEmitter<ChatEvents>,
-    private webSocket: RemoteServer
+    private webSocket: RemoteServer,
+    userName: string
   ) {
-    this.view = new UserDialogueView(chatEmitter);
+    this.view = new UserDialogueView(chatEmitter, userName);
+    this.model = new UserDialogueModel(userName);
     this.setSubscribers();
   }
 
   private setSubscribers(): void {
     this.subs.push(
       this.chatEmitter.subscribe('chat-conversation', ({ user }) => {
-        this.model.setUser(user);
-        this.model.getDialogueWithUser(this.view.startDisalogue.bind(this.view));
+        this.view.startDisalogue(user);
+        this.model.setInterlocutor(user.login);
       })
     );
+    this.subs.push(this.chatEmitter.subscribe('chat-msg', ({ text }) => this.model.sendMessage(text)));
+    this.subs.push(this.emitter.subscribe('msg-send', ({ message }) => this.view.addMessageByAuthor(message)));
     this.subs.push(
-      this.chatEmitter.subscribe('chat-msg', ({ login, text }) => this.webSocket.sendMessage(text, login))
+      this.emitter.subscribe('msg-receive', ({ message }) =>
+        this.model.isCurrentConversation(message, this.view.addMessageByinterlocutor.bind(this.view))
+      )
     );
     this.subs.push(
-      this.emitter.subscribe('socket-msg', ({ message }) =>
-        this.model.getDialogueWithUser(this.view.startDisalogue.bind(this.view), message)
+      this.emitter.subscribe('response-messeges', ({ messages }) =>
+        this.model.getCurrentConversation(messages, this.view.createDialogue.bind(this.view))
       )
+    );
+    this.subs.push(
+      this.chatEmitter.subscribe('chat-change-read-status', ({ status }) => this.model.changeReadStatus(status))
     );
   }
 

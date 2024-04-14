@@ -1,22 +1,43 @@
-import { Message, User } from '@alltypes/serverResponse';
-import { isNull } from '@utils/functions';
+import { Message } from '@alltypes/serverResponse';
+import { changeMsgToReadStatus, getMessageHistoryWithUser, sendMessage } from '../../../web-socket.ts/socket-actions';
 
 export class UserDialogueModel {
-  private conversation: Message[] = [];
+  private interlocutor = '';
 
-  private companion: User | undefined;
+  private changeToRead = false;
 
-  public getDialogueWithUser(callback: (user: User, dialogue?: Message[]) => void, message?: Message): void {
-    if (message) this.conversation.push(message);
-    if (this.companion) {
-      const dialogue: Message[] = this.conversation.filter(
-        (companion) => companion.to === isNull(this.companion).login
-      );
-      callback(this.companion, dialogue);
+  constructor(private userName: string) {}
+
+  public getCurrentConversation(messages: Message[], callback: (dialogue: Message[]) => void): void {
+    if (!this.changeToRead) {
+      callback(messages);
+    } else {
+      messages.forEach((message) => {
+        if (message.from === this.interlocutor && message.to === this.userName && !message.status.isReaded) {
+          changeMsgToReadStatus(message.id);
+        }
+      });
+    }
+    this.changeToRead = false;
+  }
+
+  public isCurrentConversation(message: Message, callback: (message: Message) => void): void {
+    if (message.from === this.interlocutor) {
+      callback(message);
     }
   }
 
-  setUser(user: User): void {
-    this.companion = user;
+  public sendMessage(text: string) {
+    sendMessage(this.interlocutor, text);
+  }
+
+  public changeReadStatus(status: boolean): void {
+    getMessageHistoryWithUser(this.interlocutor);
+    this.changeToRead = status;
+  }
+
+  public setInterlocutor(interlocutor: string): void {
+    this.interlocutor = interlocutor;
+    getMessageHistoryWithUser(this.interlocutor);
   }
 }

@@ -1,3 +1,5 @@
+import { MessageHistoryRequest, MsgReadRequest } from './serverRequests';
+
 interface AuthResponse {
   id: ResponseAuthenticationList;
   type: ResponseAuthenticationList;
@@ -5,6 +7,17 @@ interface AuthResponse {
     user: {
       isLogined: boolean;
       login: string;
+    };
+  };
+}
+
+interface MsgReadResponse extends MsgReadRequest {
+  payload: {
+    message: {
+      id: string;
+      status: {
+        isReaded: boolean;
+      };
     };
   };
 }
@@ -37,7 +50,7 @@ interface ResponseMsg extends RequestMsg {
   };
 }
 
-type Message = {
+interface Message {
   id: string;
   from: string;
   to: string;
@@ -48,7 +61,16 @@ type Message = {
     isReaded: boolean;
     isEdited: boolean;
   };
-};
+}
+
+interface ReceivedMessage extends Omit<ResponseMsg, 'id'> {
+  id: null;
+}
+interface MessageHistoryResponse extends Omit<MessageHistoryRequest, 'payload'> {
+  payload: {
+    messages: Message[];
+  };
+}
 
 interface ResponseError {
   id: 'MSG_SEND' | 'USER_ACTIVE' | 'USER_INACTIVE' | 'USER_LOGIN' | 'USER_LOGOUT';
@@ -63,7 +85,15 @@ type User = {
   isLogined: boolean;
 };
 
-type WebSocketResponse = AuthResponse | ResponseError | ResponseUsers | ResponseMsg;
+type WebSocketResponse =
+  | AuthResponse
+  | ResponseError
+  | ResponseUsers
+  | ResponseMsg
+  | ReceivedMessage
+  | MessageHistoryResponse
+  | MsgReadResponse
+  | ResponseMsg;
 
 type ResponseAuthenticationList = 'USER_LOGIN' | 'USER_LOGOUT';
 
@@ -78,4 +108,7 @@ export {
   RequestMsg,
   ResponseMsg,
   Message,
+  ReceivedMessage,
+  MessageHistoryResponse,
+  MsgReadResponse,
 };
