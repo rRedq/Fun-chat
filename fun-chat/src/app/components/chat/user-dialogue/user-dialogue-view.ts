@@ -27,6 +27,10 @@ export class UserDialogueView {
 
   private root: HTMLDivElement = div({ className: 'dialogue' }, this.header, this.content, this.form);
 
+  private placeholder: HTMLDivElement = div({ textContent: 'Send your first message...' });
+
+  private status: HTMLDivElement = div({});
+
   private autoScroll = false;
 
   private subs: (() => void)[] = [];
@@ -52,8 +56,15 @@ export class UserDialogueView {
     this.msg.disabled = false;
     const name = div({ className: 'dialogue__name', textContent: `${user.login}` });
     const isOnline = user.isLogined ? 'online' : 'offline';
-    const status = div({ className: `dialogue__status-${isOnline}`, textContent: isOnline });
-    appendChildren(this.header, [name, status]);
+    this.status = div({ className: `dialogue__status-${isOnline}`, textContent: isOnline });
+    appendChildren(this.header, [name, this.status]);
+  }
+
+  public updateUserStatus(status: boolean): void {
+    const newStatus = status ? 'online' : 'offline';
+    this.status.textContent = newStatus;
+    this.status.className = '';
+    this.status.classList.add(`dialogue__status-${newStatus}`);
   }
 
   public createDialogue(dialogue: Message[]): void {
@@ -67,7 +78,7 @@ export class UserDialogueView {
         }
       });
     } else {
-      this.content.append(div({ textContent: 'Send your first message...' }));
+      this.content.append(this.placeholder);
     }
   }
 
@@ -107,7 +118,6 @@ export class UserDialogueView {
   }
 
   private setStatus(isDelivered?: boolean, isReaded?: boolean): string {
-    console.log(isDelivered);
     let statusStr: string;
     if (isReaded) {
       statusStr = 'read';
@@ -123,6 +133,7 @@ export class UserDialogueView {
     message: Message,
     { author, msgType, status }: { author: string; msgType: string; status: HTMLDivElement }
   ): void {
+    this.placeholder.remove();
     const text = p({ className: 'dialogue__text', textContent: message.text });
     const label = div({ textContent: author });
     const time = div({

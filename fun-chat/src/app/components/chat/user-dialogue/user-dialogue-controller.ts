@@ -1,5 +1,6 @@
 import { AppEvents, ChatEvents } from '@alltypes/emit-events';
 import { EventEmitter } from '@shared/event-emitter';
+import { socketEmitter } from '@shared/const';
 import { RemoteServer } from 'app/web-socket.ts/web-socket';
 import { UserDialogueView } from './user-dialogue-view';
 import { UserDialogueModel } from './user-dialogue-model';
@@ -43,6 +44,16 @@ export class UserDialogueComtroller {
     );
     this.subs.push(
       this.chatEmitter.subscribe('chat-change-read-status', ({ status }) => this.model.changeReadStatus(status))
+    );
+    this.subs.push(
+      socketEmitter.subscribe('user-login', ({ user }) =>
+        this.model.isInterlocutor(user, this.view.updateUserStatus.bind(this.view))
+      )
+    );
+    this.subs.push(
+      socketEmitter.subscribe('user-logout', ({ user }) =>
+        this.model.isInterlocutor(user, this.view.updateUserStatus.bind(this.view))
+      )
     );
   }
 

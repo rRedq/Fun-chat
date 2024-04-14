@@ -1,4 +1,4 @@
-import { Message } from '@alltypes/serverResponse';
+import { Message, User } from '@alltypes/serverResponse';
 import { changeMsgToReadStatus, getMessageHistoryWithUser, sendMessage } from '../../../web-socket.ts/socket-actions';
 
 export class UserDialogueModel {
@@ -24,6 +24,13 @@ export class UserDialogueModel {
   public isCurrentConversation(message: Message, callback: (message: Message) => void): void {
     if (message.from === this.interlocutor) {
       callback(message);
+    }
+  }
+
+  public isInterlocutor(user: User, callback: (status: boolean) => void): void {
+    console.log(user);
+    if (user.login === this.interlocutor) {
+      callback(user.isLogined);
     }
   }
 

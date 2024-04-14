@@ -1,13 +1,6 @@
 import { WebSocketResponse } from '@alltypes/serverResponse';
-import {
-  logIn,
-  logOut,
-  receiveMessage,
-  sendMessage,
-  getUsers,
-  messageHistoryResponse,
-  messageIsRead,
-} from './socket-responses';
+import { socketEmitter } from '@shared/const';
+import { logIn, logOut, receiveMessage, sendMessage, messageHistoryResponse, messageIsRead } from './socket-responses';
 
 export class RemoteServer {
   private webSocket: WebSocket;
@@ -32,8 +25,11 @@ export class RemoteServer {
       logIn(response);
     } else if (response.type === 'USER_LOGOUT') {
       logOut(response);
-    } else if (response.type === 'USER_ACTIVE' || response.type === 'USER_INACTIVE') {
-      getUsers(response);
+    } else if (response.type === 'USER_ACTIVE') {
+      // getUsers(response);
+      socketEmitter.emit('users-get-active', { data: response.payload.users });
+    } else if (response.type === 'USER_INACTIVE') {
+      socketEmitter.emit('users-get-inactive', { data: response.payload.users });
     } else if (response.type === 'MSG_SEND') {
       if (response.id === 'MSG_SEND') {
         sendMessage(response);
@@ -44,8 +40,12 @@ export class RemoteServer {
       messageHistoryResponse(response);
     } else if (response.type === 'MSG_READ') {
       messageIsRead(response);
+    } else if (response.type === 'USER_EXTERNAL_LOGIN') {
+      socketEmitter.emit('user-login', { user: response.payload.user });
+    } else if (response.type === 'USER_EXTERNAL_LOGOUT') {
+      socketEmitter.emit('user-logout', { user: response.payload.user });
     } else if (response.type === 'ERROR') {
-      console.error(response.type, response.payload.error);
+      console.error(response.id, response.payload.error);
     }
   }
 
@@ -65,7 +65,7 @@ export class RemoteServer {
           clearInterval(interval);
           resolve(true);
         }
-      });
+      }, 50);
       this.webSocket.onerror = () => {
         reject(new Error('server unavailable'));
       };

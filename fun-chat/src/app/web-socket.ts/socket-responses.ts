@@ -10,7 +10,7 @@ import {
 import { socketEmitter } from '@shared/const';
 
 function getUsers(response: ResponseUsers): void {
-  socketEmitter.emit('app-get-users', { data: response.payload.users });
+  socketEmitter.emit('users-get-active', { data: response.payload.users });
 }
 
 function receiveMessage(response: ReceivedMessage): void {

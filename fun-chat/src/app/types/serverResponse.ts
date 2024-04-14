@@ -22,6 +22,17 @@ interface MsgReadResponse extends MsgReadRequest {
   };
 }
 
+interface UserAuth {
+  id: null;
+  type: 'USER_EXTERNAL_LOGOUT' | 'USER_EXTERNAL_LOGIN';
+  payload: {
+    user: {
+      login: string;
+      isLogined: boolean;
+    };
+  };
+}
+
 interface ResponseUsers {
   id: 'USER_ACTIVE' | 'USER_INACTIVE';
   type: 'USER_ACTIVE' | 'USER_INACTIVE';
@@ -93,7 +104,8 @@ type WebSocketResponse =
   | ReceivedMessage
   | MessageHistoryResponse
   | MsgReadResponse
-  | ResponseMsg;
+  | ResponseMsg
+  | UserAuth;
 
 type ResponseAuthenticationList = 'USER_LOGIN' | 'USER_LOGOUT';
 

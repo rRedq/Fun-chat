@@ -11,8 +11,10 @@ interface AppEvents {
   'app-auth-error': { error: string };
   'app-logout': { status: boolean };
   'app-logout-success': { status: boolean };
-  'app-get-users': { data: User[] };
-  // 'socket-msg': { message: Message };
+  'users-get-active': { data: User[] };
+  'users-get-inactive': { data: User[] };
+  'user-logout': { user: User };
+  'user-login': { user: User };
   'msg-send': { message: Message };
   'msg-receive': { message: Message };
   'response-messeges': { messages: Message[] };

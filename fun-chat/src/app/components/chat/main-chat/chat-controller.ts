@@ -7,7 +7,6 @@ import { FooterView } from '../footer/footer-view';
 import { UserListComtroller } from '../user-list/user-list-controller';
 import { UserDialogueComtroller } from '../user-dialogue/user-dialogue-controller';
 import { HeaderView } from '../header/header-view';
-import { getUsers } from '../../../web-socket.ts/socket-actions';
 
 export class ChatController extends EventEmitter<ChatEvents> {
   private chatView: ChatView;
@@ -27,7 +26,6 @@ export class ChatController extends EventEmitter<ChatEvents> {
     this.userList = new UserListComtroller(emitter, userName, this);
     this.dialogue = new UserDialogueComtroller(emitter, this, webSocket, userName);
     this.chatView = new ChatView(header, this.userList.getUserListView(), this.dialogue.getUserListView(), footer);
-    getUsers();
   }
 
   private removeChat(): void {
