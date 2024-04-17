@@ -28,7 +28,6 @@ export class UserDialogueModel {
   }
 
   public isInterlocutor(user: User, callback: (status: boolean) => void): void {
-    console.log(user);
     if (user.login === this.interlocutor) {
       callback(user.isLogined);
     }

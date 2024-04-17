@@ -1,3 +1,4 @@
+import { MessageView } from '@components/chat/message/message-view';
 import { LoginInputNames } from './common';
 import { Message, User } from './serverResponse';
 
@@ -31,6 +32,7 @@ interface ChatEvents {
   'chat-conversation': { user: User };
   'chat-msg': { text: string };
   'chat-change-read-status': { status: boolean };
+  'click-change': { message: MessageView };
 }
 
 export { LoginEvents, AppEvents, UserListEvents, ChatEvents };

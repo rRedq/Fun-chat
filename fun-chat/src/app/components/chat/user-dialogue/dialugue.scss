@@ -53,6 +53,7 @@
     padding: 1%;
   }
   &__cover {
+    position: relative;
     width: 100%;
   }
   &__message-to,
@@ -61,6 +62,7 @@
     padding: 0 1%;
     background-color: var(--light-1);
     border-radius: 3px;
+    cursor: pointer;
   }
   &__message {
     &-from {

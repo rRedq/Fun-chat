@@ -1,10 +1,10 @@
 import { Message, User } from '@alltypes/serverResponse';
 import './dialugue.scss';
-import { button, div, form, input, p } from '@utils/tag-create-functions';
+import { button, div, form, input } from '@utils/tag-create-functions';
 import { appendChildren } from '@utils/dom-helpers';
 import { ChatEvents } from '@alltypes/emit-events';
 import { EventEmitter } from '@shared/event-emitter';
-import { socketEmitter } from '@shared/const';
+import { MessageView } from '../message/message-view';
 
 export class UserDialogueView {
   private header: HTMLDivElement = div({ className: 'dialogue__header' });
@@ -33,7 +33,7 @@ export class UserDialogueView {
 
   private autoScroll = false;
 
-  private subs: (() => void)[] = [];
+  private messages: MessageView[] = [];
 
   constructor(
     private chatEmitter: EventEmitter<ChatEvents>,
@@ -52,7 +52,7 @@ export class UserDialogueView {
 
   public startDisalogue(user: User): void {
     this.header.replaceChildren();
-    this.subs.forEach((unsubscribe) => unsubscribe());
+    this.messages.forEach((message) => message.removeMessage());
     this.msg.disabled = false;
     const name = div({ className: 'dialogue__name', textContent: `${user.login}` });
     const isOnline = user.isLogined ? 'online' : 'offline';
@@ -83,65 +83,20 @@ export class UserDialogueView {
   }
 
   public addMessageByinterlocutor(message: Message): void {
-    const author: string = message.from;
-    const msgType = 'dialogue__message-from';
-    const msgStatus = '';
-    const status = div({
-      className: 'dialogue__msg-status',
-      textContent: msgStatus,
-    });
-    this.addMessageToConversation(message, { author, msgType, status });
+    const msg = new MessageView(this.chatEmitter);
+    this.messages.push(msg);
+    this.addMessageToConversation(msg.addMessageByinterlocutor(message));
   }
 
   public addMessageByAuthor(message: Message): void {
-    const author = 'you';
-    const msgType = 'dialogue__message-to';
-    const msgStatus = this.setStatus(message.status.isDelivered, message.status.isReaded);
-    const status = div({
-      className: 'dialogue__msg-status',
-      textContent: msgStatus,
-    });
-
-    if (!message.status.isReaded) {
-      const subscribe = socketEmitter.subscribe('msg-read', ({ id, isReaded }) => {
-        console.log(message);
-        if (message.id === id) {
-          const newMsgStatus = this.setStatus(false, isReaded);
-          status.textContent = newMsgStatus;
-          subscribe();
-        }
-      });
-      this.subs.push(subscribe);
-    }
-
-    this.addMessageToConversation(message, { author, msgType, status });
+    const msg = new MessageView(this.chatEmitter);
+    this.messages.push(msg);
+    this.addMessageToConversation(msg.addMessageByAuthor(message));
   }
 
-  private setStatus(isDelivered?: boolean, isReaded?: boolean): string {
-    let statusStr: string;
-    if (isReaded) {
-      statusStr = 'read';
-    } else if (isDelivered) {
-      statusStr = 'delivered';
-    } else {
-      statusStr = 'sent';
-    }
-    return statusStr;
-  }
-
-  private addMessageToConversation(
-    message: Message,
-    { author, msgType, status }: { author: string; msgType: string; status: HTMLDivElement }
-  ): void {
+  private addMessageToConversation(cover: HTMLDivElement): void {
     this.placeholder.remove();
-    const text = p({ className: 'dialogue__text', textContent: message.text });
-    const label = div({ textContent: author });
-    const time = div({
-      textContent: new Date(message.datetime).toLocaleString('ru-RU', { timeZone: 'Europe/Moscow' }),
-    });
-    const msgHeader = div({ className: 'dialogue__msg-header' }, label, time);
-    const msg = div({ className: msgType }, msgHeader, text, status);
-    const cover = div({ className: 'dialogue__cover' }, msg);
+
     this.content.append(cover);
 
     this.autoScroll = true;
