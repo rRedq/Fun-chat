@@ -21,12 +21,12 @@ export class RemoteServer {
   private serverResponse(data: string): void {
     const response: WebSocketResponse = JSON.parse(data);
     console.log(response);
+
     if (response.type === 'USER_LOGIN') {
       logIn(response);
     } else if (response.type === 'USER_LOGOUT') {
       logOut(response);
     } else if (response.type === 'USER_ACTIVE') {
-      // getUsers(response);
       socketEmitter.emit('users-get-active', { data: response.payload.users });
     } else if (response.type === 'USER_INACTIVE') {
       socketEmitter.emit('users-get-inactive', { data: response.payload.users });
@@ -44,6 +44,10 @@ export class RemoteServer {
       socketEmitter.emit('user-login', { user: response.payload.user });
     } else if (response.type === 'USER_EXTERNAL_LOGOUT') {
       socketEmitter.emit('user-logout', { user: response.payload.user });
+    } else if (response.type === 'MSG_EDIT') {
+      socketEmitter.emit('response-change-msg', {
+        response: response.payload.message,
+      });
     } else if (response.type === 'ERROR') {
       console.error(response.id, response.payload.error);
     }

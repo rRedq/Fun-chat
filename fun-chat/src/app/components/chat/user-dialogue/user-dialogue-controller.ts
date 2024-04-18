@@ -1,9 +1,9 @@
 import { AppEvents, ChatEvents } from '@alltypes/emit-events';
 import { EventEmitter } from '@shared/event-emitter';
 import { socketEmitter } from '@shared/const';
-import { RemoteServer } from 'app/web-socket.ts/web-socket';
 import { UserDialogueView } from './user-dialogue-view';
 import { UserDialogueModel } from './user-dialogue-model';
+import { editMsg } from '../../../web-socket.ts/socket-actions';
 
 export class UserDialogueComtroller {
   private view: UserDialogueView;
@@ -15,15 +15,15 @@ export class UserDialogueComtroller {
   constructor(
     private emitter: EventEmitter<AppEvents>,
     private chatEmitter: EventEmitter<ChatEvents>,
-    private webSocket: RemoteServer,
     userName: string
   ) {
     this.view = new UserDialogueView(chatEmitter, userName);
     this.model = new UserDialogueModel(userName);
+    this.setChatSubscribers();
     this.setSubscribers();
   }
 
-  private setSubscribers(): void {
+  private setChatSubscribers(): void {
     this.subs.push(
       this.chatEmitter.subscribe('chat-conversation', ({ user }) => {
         this.view.startDisalogue(user);
@@ -31,6 +31,14 @@ export class UserDialogueComtroller {
       })
     );
     this.subs.push(this.chatEmitter.subscribe('chat-msg', ({ text }) => this.model.sendMessage(text)));
+    this.subs.push(
+      this.chatEmitter.subscribe('chat-change-read-status', ({ status }) => this.model.changeReadStatus(status))
+    );
+    this.subs.push(this.chatEmitter.subscribe('change-msg', ({ id, text }) => this.view.editMessage(id, text)));
+    this.subs.push(this.chatEmitter.subscribe('change-msg-success', ({ id, text }) => editMsg(id, text)));
+  }
+
+  private setSubscribers(): void {
     this.subs.push(this.emitter.subscribe('msg-send', ({ message }) => this.view.addMessageByAuthor(message)));
     this.subs.push(
       this.emitter.subscribe('msg-receive', ({ message }) =>
@@ -41,9 +49,6 @@ export class UserDialogueComtroller {
       this.emitter.subscribe('response-messeges', ({ messages }) =>
         this.model.getCurrentConversation(messages, this.view.createDialogue.bind(this.view))
       )
-    );
-    this.subs.push(
-      this.chatEmitter.subscribe('chat-change-read-status', ({ status }) => this.model.changeReadStatus(status))
     );
     this.subs.push(
       socketEmitter.subscribe('user-login', ({ user }) =>
@@ -62,6 +67,7 @@ export class UserDialogueComtroller {
   }
 
   public removeDialogue(): void {
+    this.view.remove();
     this.subs.forEach((unsubscribe: () => void) => unsubscribe());
   }
 }

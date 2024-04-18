@@ -74,6 +74,28 @@ interface Message {
   };
 }
 
+interface EditMsgResponse {
+  id: 'MSG_EDIT';
+  type: 'MSG_EDIT';
+  payload: {
+    message: {
+      id: string;
+      text: string;
+      status: {
+        isEdited: boolean;
+      };
+    };
+  };
+}
+
+interface CoreEditMsg {
+  id: string;
+  text: string;
+  status: {
+    isEdited: boolean;
+  };
+}
+
 interface ReceivedMessage extends Omit<ResponseMsg, 'id'> {
   id: null;
 }
@@ -105,7 +127,8 @@ type WebSocketResponse =
   | MessageHistoryResponse
   | MsgReadResponse
   | ResponseMsg
-  | UserAuth;
+  | UserAuth
+  | EditMsgResponse;
 
 type ResponseAuthenticationList = 'USER_LOGIN' | 'USER_LOGOUT';
 
@@ -123,4 +146,5 @@ export {
   ReceivedMessage,
   MessageHistoryResponse,
   MsgReadResponse,
+  CoreEditMsg,
 };

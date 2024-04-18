@@ -1,0 +1,23 @@
+.menu {
+  position: absolute;
+  width: 8rem;
+  background-color: var(--light-0);
+  color: var(--light-4);
+  border-radius: 3px;
+  left: 45%;
+  top: 40%;
+  user-select: none;
+  text-align: center;
+  &__item {
+    border: 1px solid var(--light-4);
+    padding: 5%;
+    cursor: pointer;
+    &:first-child {
+      border-bottom: none;
+    }
+  }
+}
+.statuses {
+  display: flex;
+  justify-content: space-between;
+}

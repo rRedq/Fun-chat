@@ -4,6 +4,7 @@ import { button, div, form, input } from '@utils/tag-create-functions';
 import { appendChildren } from '@utils/dom-helpers';
 import { ChatEvents } from '@alltypes/emit-events';
 import { EventEmitter } from '@shared/event-emitter';
+import { MessageController } from '../message/message-controller';
 import { MessageView } from '../message/message-view';
 
 export class UserDialogueView {
@@ -21,7 +22,7 @@ export class UserDialogueView {
     placeholder: 'Message...',
   });
 
-  private btn: HTMLButtonElement = button({ className: 'dialogue__btn btn', textContent: 'Send' });
+  private btn: HTMLButtonElement = button({ className: 'dialogue__btn btn', textContent: 'Send', disabled: true });
 
   private form: HTMLFormElement = form({ className: 'dialogue__form' }, this.msg, this.btn);
 
@@ -33,27 +34,44 @@ export class UserDialogueView {
 
   private autoScroll = false;
 
-  private messages: MessageView[] = [];
+  private messageId = '';
+
+  private conversation: MessageController[] = [];
 
   constructor(
     private chatEmitter: EventEmitter<ChatEvents>,
     private userName: string
   ) {
-    this.form.addEventListener('submit', (e: Event) => {
-      e.preventDefault();
-      if (this.msg.value.trim().length > 0) {
-        this.chatEmitter.emit('chat-msg', { text: this.msg.value });
-        this.chatEmitter.emit('chat-change-read-status', { status: true });
-        this.removeIsReadListeners();
-      }
+    this.form.addEventListener('submit', this.submitMessage);
+    this.content.addEventListener('click', () => MessageView.removeMenu());
+  }
+
+  private submitMessage = (e: Event): void => {
+    e.preventDefault();
+    if (!this.messageId && this.msg.value.trim().length > 0) {
+      this.chatEmitter.emit('chat-msg', { text: this.msg.value });
+      this.chatEmitter.emit('chat-change-read-status', { status: true });
+      this.removeIsReadListeners();
       this.msg.value = '';
-    });
+    } else if (this.messageId && this.msg.value.trim().length > 0) {
+      this.chatEmitter.emit('change-msg-success', { id: this.messageId, text: this.msg.value });
+      this.messageId = '';
+      this.msg.value = '';
+    }
+  };
+
+  public editMessage(messageId: string, text: string): void {
+    if (this.messageId !== messageId) {
+      this.messageId = messageId;
+      this.msg.value = text;
+    }
   }
 
   public startDisalogue(user: User): void {
+    this.remove();
     this.header.replaceChildren();
-    this.messages.forEach((message) => message.removeMessage());
     this.msg.disabled = false;
+    this.btn.disabled = false;
     const name = div({ className: 'dialogue__name', textContent: `${user.login}` });
     const isOnline = user.isLogined ? 'online' : 'offline';
     this.status = div({ className: `dialogue__status-${isOnline}`, textContent: isOnline });
@@ -83,15 +101,15 @@ export class UserDialogueView {
   }
 
   public addMessageByinterlocutor(message: Message): void {
-    const msg = new MessageView(this.chatEmitter);
-    this.messages.push(msg);
-    this.addMessageToConversation(msg.addMessageByinterlocutor(message));
+    const msg = new MessageController(this.chatEmitter, message);
+    this.conversation.push(msg);
+    this.addMessageToConversation(msg.addMessageByinterlocutor());
   }
 
   public addMessageByAuthor(message: Message): void {
-    const msg = new MessageView(this.chatEmitter);
-    this.messages.push(msg);
-    this.addMessageToConversation(msg.addMessageByAuthor(message));
+    const msg = new MessageController(this.chatEmitter, message);
+    this.conversation.push(msg);
+    this.addMessageToConversation(msg.addMessageByAuthor());
   }
 
   private addMessageToConversation(cover: HTMLDivElement): void {
@@ -132,5 +150,12 @@ export class UserDialogueView {
 
   public getRoot(): HTMLDivElement {
     return this.root;
+  }
+
+  public remove(): void {
+    this.conversation.forEach((msg: MessageController) => msg.remove());
+    this.msg.value = '';
+    this.messageId = '';
+    this.conversation.length = 0;
   }
 }

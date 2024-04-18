@@ -4,4 +4,7 @@
   width: 100%;
   margin: 1%;
   cursor: pointer;
+  &:disabled {
+    cursor: auto;
+  }
 }

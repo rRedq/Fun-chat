@@ -1,6 +1,5 @@
-import { MessageView } from '@components/chat/message/message-view';
 import { LoginInputNames } from './common';
-import { Message, User } from './serverResponse';
+import { CoreEditMsg, Message, User } from './serverResponse';
 
 interface LoginEvents {
   'login-input': { value: string; name: LoginInputNames };
@@ -20,6 +19,9 @@ interface AppEvents {
   'msg-receive': { message: Message };
   'response-messeges': { messages: Message[] };
   'msg-read': { id: string; isReaded: boolean };
+  'response-change-msg': {
+    response: CoreEditMsg;
+  };
 }
 // Переписать на request-msg / response-auth...
 
@@ -32,7 +34,8 @@ interface ChatEvents {
   'chat-conversation': { user: User };
   'chat-msg': { text: string };
   'chat-change-read-status': { status: boolean };
-  'click-change': { message: MessageView };
+  'change-msg': { id: string; text: string };
+  'change-msg-success': { id: string; text: string };
 }
 
 export { LoginEvents, AppEvents, UserListEvents, ChatEvents };

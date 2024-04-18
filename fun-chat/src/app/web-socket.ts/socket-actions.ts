@@ -1,16 +1,17 @@
 import { serverUrl } from '@shared/const';
-import {
-  authenticatedUsers,
-  authenticationData,
-  messageHistory,
-  msgRead,
-  sendMessageToServer,
-  unauthorizedUsers,
-} from '@utils/socket-data-containers';
+
 import { UserData } from '@alltypes/common';
 import { RequestMsg, ResponseAuthenticationList } from '@alltypes/serverResponse';
 import { MessageHistoryRequest, MsgReadRequest } from '@alltypes/serverRequests';
 import { RemoteServer } from './web-socket';
+import {
+  sendMessageToServer,
+  authenticatedUsers,
+  unauthorizedUsers,
+  authenticationData,
+  messageHistory,
+  msgRead,
+} from './socket-data-containers';
 
 export const webSocket = new RemoteServer(serverUrl);
 
@@ -39,4 +40,27 @@ function changeMsgToReadStatus(id: string): void {
   webSocket.serverRequest(JSON.stringify(data));
 }
 
-export { sendMessage, getUsers, sendAuthentication, getMessageHistoryWithUser, changeMsgToReadStatus };
+function editMsg(id: string, text: string): void {
+  const data: {
+    id: 'MSG_EDIT';
+    type: 'MSG_EDIT';
+    payload: {
+      message: {
+        id: string;
+        text: string;
+      };
+    };
+  } = {
+    id: 'MSG_EDIT',
+    type: 'MSG_EDIT',
+    payload: {
+      message: {
+        id,
+        text,
+      },
+    },
+  };
+  webSocket.serverRequest(JSON.stringify(data));
+}
+
+export { sendMessage, getUsers, sendAuthentication, getMessageHistoryWithUser, changeMsgToReadStatus, editMsg };

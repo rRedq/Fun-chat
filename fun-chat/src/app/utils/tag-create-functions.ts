@@ -10,7 +10,7 @@ function main(props: BaseTagsProps, ...children: HTMLElement[]): HTMLDivElement 
 function section(props: BaseTagsProps, ...children: HTMLElement[]): HTMLElement {
   return createElement<BaseTagsProps, HTMLElement>('section', props, children);
 }
-function button(props: BaseTagsProps): HTMLButtonElement {
+function button(props: BaseTagsProps & { disabled?: boolean }): HTMLButtonElement {
   return createElement<BaseTagsProps, HTMLButtonElement>('button', props);
 }
 function input(props: InputProps): HTMLInputElement {

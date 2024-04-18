@@ -24,7 +24,7 @@ export class ChatController extends EventEmitter<ChatEvents> {
     const header = new HeaderView(emitter, userName, this.removeChat.bind(this)).getHeaderView();
     const footer = new FooterView().getRoot();
     this.userList = new UserListComtroller(emitter, userName, this);
-    this.dialogue = new UserDialogueComtroller(emitter, this, webSocket, userName);
+    this.dialogue = new UserDialogueComtroller(emitter, this, userName);
     this.chatView = new ChatView(header, this.userList.getUserListView(), this.dialogue.getUserListView(), footer);
   }
 
