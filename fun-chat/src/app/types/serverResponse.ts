@@ -118,6 +118,19 @@ type User = {
   isLogined: boolean;
 };
 
+type ResponseDeleteMsg = {
+  id: 'MSG_DELETE';
+  type: 'MSG_DELETE';
+  payload: {
+    message: {
+      id: string;
+      status: {
+        isDeleted: boolean;
+      };
+    };
+  };
+};
+
 type WebSocketResponse =
   | AuthResponse
   | ResponseError
@@ -128,7 +141,8 @@ type WebSocketResponse =
   | MsgReadResponse
   | ResponseMsg
   | UserAuth
-  | EditMsgResponse;
+  | EditMsgResponse
+  | ResponseDeleteMsg;
 
 type ResponseAuthenticationList = 'USER_LOGIN' | 'USER_LOGOUT';
 

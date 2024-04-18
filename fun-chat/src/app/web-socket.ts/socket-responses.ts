@@ -21,8 +21,12 @@ function sendMessage(response: ResponseMsg): void {
   socketEmitter.emit('msg-send', { message: response.payload.message });
 }
 
-function logIn(response: AuthResponse): void {
-  socketEmitter.emit('app-auth-success', { login: response.payload.user.login });
+function logIn(response: AuthResponse | ResponseError): void {
+  if (response.type === 'USER_LOGIN') {
+    socketEmitter.emit('app-auth-success', { login: response.payload.user.login });
+  } else if (response.type === 'ERROR') {
+    socketEmitter.emit('app-auth-error', { error: response.payload.error });
+  }
 }
 
 function logOut(response: AuthResponse | ResponseError): void {

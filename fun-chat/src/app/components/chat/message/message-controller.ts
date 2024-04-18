@@ -18,20 +18,35 @@ export class MessageController {
   ) {
     this.view = new MessageView(this);
     this.model = new MessageModel(message);
+    this.setSubscribers();
+  }
+
+  private setSubscribers(): void {
     this.subs.push(
       socketEmitter.subscribe('response-change-msg', ({ response }) => {
         this.model.updateMessage(response, this.view.editMessage.bind(this.view));
       })
     );
+    const deleteMsg = socketEmitter.subscribe('response-delete-msg', ({ id }) => {
+      if (this.model.isCurrentMessage(id)) {
+        this.view.removeMessage();
+        deleteMsg();
+      }
+    });
+    this.subs.push(deleteMsg);
   }
 
   public changeMessage = (): void => {
     this.chatEmitter.emit('change-msg', this.model.changeMessage());
   };
 
+  public deleteMessage = (): void => {
+    this.model.deleteMessage();
+  };
+
   public addMessageByAuthor(): HTMLDivElement {
     const unsubscribe = socketEmitter.subscribe('msg-read', ({ id, isReaded }) => {
-      if (this.model.isRead(id)) {
+      if (this.model.isCurrentMessage(id)) {
         this.view.setStatus(false, isReaded);
         unsubscribe();
       }

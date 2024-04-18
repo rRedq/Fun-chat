@@ -22,7 +22,7 @@ export class RemoteServer {
     const response: WebSocketResponse = JSON.parse(data);
     console.log(response);
 
-    if (response.type === 'USER_LOGIN') {
+    if (response.id === 'USER_LOGIN') {
       logIn(response);
     } else if (response.type === 'USER_LOGOUT') {
       logOut(response);
@@ -45,9 +45,9 @@ export class RemoteServer {
     } else if (response.type === 'USER_EXTERNAL_LOGOUT') {
       socketEmitter.emit('user-logout', { user: response.payload.user });
     } else if (response.type === 'MSG_EDIT') {
-      socketEmitter.emit('response-change-msg', {
-        response: response.payload.message,
-      });
+      socketEmitter.emit('response-change-msg', { response: response.payload.message });
+    } else if (response.type === 'MSG_DELETE') {
+      socketEmitter.emit('response-delete-msg', { id: response.payload.message.id });
     } else if (response.type === 'ERROR') {
       console.error(response.id, response.payload.error);
     }

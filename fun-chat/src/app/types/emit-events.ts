@@ -22,6 +22,7 @@ interface AppEvents {
   'response-change-msg': {
     response: CoreEditMsg;
   };
+  'response-delete-msg': { id: string };
 }
 // Переписать на request-msg / response-auth...
 

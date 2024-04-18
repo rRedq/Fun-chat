@@ -153,9 +153,13 @@ export class UserDialogueView {
   }
 
   public remove(): void {
+    this.clear();
     this.conversation.forEach((msg: MessageController) => msg.remove());
+    this.conversation.length = 0;
+  }
+
+  public clear(): void {
     this.msg.value = '';
     this.messageId = '';
-    this.conversation.length = 0;
   }
 }

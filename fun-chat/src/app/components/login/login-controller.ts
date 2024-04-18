@@ -1,13 +1,10 @@
 import { EventEmitter } from '@shared/event-emitter';
 import { LoginInputNames } from '@alltypes/common';
 import { AppEvents, LoginEvents } from '@alltypes/emit-events';
-import { RemoteServer } from 'app/web-socket.ts/web-socket';
 import { LoginModel } from './login-model';
 import { LoginView } from './login-view';
 
 export class LoginController extends EventEmitter<LoginEvents> {
-  private webSocket: RemoteServer;
-
   private loginModel: LoginModel;
 
   private emitter: EventEmitter<AppEvents>;
@@ -16,11 +13,10 @@ export class LoginController extends EventEmitter<LoginEvents> {
 
   private subs: (() => void)[] = [];
 
-  constructor(webSocket: RemoteServer, emitter: EventEmitter<AppEvents>) {
+  constructor(emitter: EventEmitter<AppEvents>) {
     super();
     this.emitter = emitter;
-    this.webSocket = webSocket;
-    this.loginModel = new LoginModel(this.webSocket);
+    this.loginModel = new LoginModel();
     this.setSubscribers();
   }
 

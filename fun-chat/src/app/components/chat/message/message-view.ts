@@ -28,6 +28,7 @@ export class MessageView {
     const deleteMsg = div({ className: 'menu__item', textContent: 'delete' });
     appendChildren(MessageView.menu, [changeMsg, deleteMsg]);
     changeMsg.addEventListener('click', this.controller.changeMessage);
+    deleteMsg.addEventListener('click', this.controller.deleteMessage);
     this.message.append(MessageView.menu);
   };
 

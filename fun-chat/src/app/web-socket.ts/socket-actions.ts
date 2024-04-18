@@ -63,4 +63,33 @@ function editMsg(id: string, text: string): void {
   webSocket.serverRequest(JSON.stringify(data));
 }
 
-export { sendMessage, getUsers, sendAuthentication, getMessageHistoryWithUser, changeMsgToReadStatus, editMsg };
+const requestDeleteMsg = (id: string): void => {
+  const data: {
+    id: 'MSG_DELETE';
+    type: 'MSG_DELETE';
+    payload: {
+      message: {
+        id: string;
+      };
+    };
+  } = {
+    id: 'MSG_DELETE',
+    type: 'MSG_DELETE',
+    payload: {
+      message: {
+        id,
+      },
+    },
+  };
+  webSocket.serverRequest(JSON.stringify(data));
+};
+
+export {
+  sendMessage,
+  getUsers,
+  sendAuthentication,
+  getMessageHistoryWithUser,
+  changeMsgToReadStatus,
+  editMsg,
+  requestDeleteMsg,
+};

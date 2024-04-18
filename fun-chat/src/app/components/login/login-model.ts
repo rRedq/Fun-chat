@@ -1,5 +1,4 @@
 import { LoginInputNames } from '@alltypes/common';
-import { RemoteServer } from 'app/web-socket.ts/web-socket';
 import { setStorage } from '@utils/storage';
 import { sendAuthentication } from '../../web-socket.ts/socket-actions';
 
@@ -15,12 +14,6 @@ export class LoginModel {
   private englishTextRegEx: RegExp = /^[a-zA-Z\s-]*$/;
 
   private firstletterRegEx: RegExp = /^[А-ЯA-Z][а-яА-Яa-zA-Z\s-]*$/;
-
-  private webSocket: RemoteServer;
-
-  constructor(webSocket: RemoteServer) {
-    this.webSocket = webSocket;
-  }
 
   public checkInputValue(param: LoginInputNames, value: string): string {
     if (param === 'name') {

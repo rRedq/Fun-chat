@@ -1,16 +1,9 @@
 import { UserData } from '@alltypes/common';
-import { RemoteServer } from 'app/web-socket.ts/web-socket';
 import { deleteStorageKey, getStorage } from '@utils/storage';
 import { sendAuthentication } from '../../web-socket.ts/socket-actions';
 
 export class AppModel {
-  private webSocket: RemoteServer;
-
   private user: UserData = { name: '', password: '' };
-
-  constructor(webSocket: RemoteServer) {
-    this.webSocket = webSocket;
-  }
 
   public init(login: () => void) {
     const user: UserData | null = getStorage();

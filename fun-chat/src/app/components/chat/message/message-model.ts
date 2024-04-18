@@ -1,4 +1,5 @@
 import { CoreEditMsg, Message } from '@alltypes/serverResponse';
+import { requestDeleteMsg } from '../../../web-socket.ts/socket-actions';
 
 export class MessageModel {
   constructor(private message: Message) {}
@@ -7,12 +8,16 @@ export class MessageModel {
     return this.message;
   }
 
-  public isRead(id: string): boolean {
+  public isCurrentMessage(id: string): boolean {
     return this.message.id === id;
   }
 
   public changeMessage(): { id: string; text: string } {
     return { id: this.message.id, text: this.message.text };
+  }
+
+  public deleteMessage(): void {
+    requestDeleteMsg(this.message.id);
   }
 
   public updateMessage(data: CoreEditMsg, callback: (text: string, isEdited: boolean) => void) {

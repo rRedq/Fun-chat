@@ -1,7 +1,6 @@
 import './chat.scss';
 import { AppEvents, ChatEvents } from '@alltypes/emit-events';
 import { EventEmitter } from '@shared/event-emitter';
-import { RemoteServer } from 'app/web-socket.ts/web-socket';
 import { ChatView } from './chat-view';
 import { FooterView } from '../footer/footer-view';
 import { UserListComtroller } from '../user-list/user-list-controller';
@@ -15,11 +14,7 @@ export class ChatController extends EventEmitter<ChatEvents> {
 
   private dialogue: UserDialogueComtroller;
 
-  constructor(
-    private webSocket: RemoteServer,
-    emitter: EventEmitter<AppEvents>,
-    userName: string
-  ) {
+  constructor(emitter: EventEmitter<AppEvents>, userName: string) {
     super();
     const header = new HeaderView(emitter, userName, this.removeChat.bind(this)).getHeaderView();
     const footer = new FooterView().getRoot();
