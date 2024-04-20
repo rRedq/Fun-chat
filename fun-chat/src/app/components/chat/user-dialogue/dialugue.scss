@@ -90,4 +90,26 @@
     padding: 1% 2%;
     font-size: 16px;
   }
+  &__history {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    &::before {
+      background: red;
+      border-bottom: 1px solid;
+      content: ' ';
+      left: 0;
+      position: absolute;
+      top: 18px;
+      width: 100%;
+    }
+    &-text {
+      background: var(--light-0);
+      max-width: 200px;
+      margin: 1%;
+      padding: 0 5%;
+      position: relative;
+    }
+  }
 }

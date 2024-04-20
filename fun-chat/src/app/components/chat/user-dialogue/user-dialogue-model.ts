@@ -38,12 +38,12 @@ export class UserDialogueModel {
   }
 
   public changeReadStatus(status: boolean): void {
-    getMessageHistoryWithUser(this.interlocutor);
+    getMessageHistoryWithUser(this.interlocutor, 'MSG_HISTORY');
     this.changeToRead = status;
   }
 
   public setInterlocutor(interlocutor: string): void {
     this.interlocutor = interlocutor;
-    getMessageHistoryWithUser(this.interlocutor);
+    getMessageHistoryWithUser(this.interlocutor, 'MSG_HISTORY');
   }
 }

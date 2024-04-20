@@ -1,6 +1,6 @@
 import { WebSocketResponse } from '@alltypes/serverResponse';
 import { socketEmitter } from '@shared/const';
-import { logIn, logOut, receiveMessage, sendMessage, messageHistoryResponse, messageIsRead } from './socket-responses';
+import { logIn, logOut, receiveMessage, sendMessage, messageIsRead } from './socket-responses';
 
 export class RemoteServer {
   private webSocket: WebSocket;
@@ -37,7 +37,7 @@ export class RemoteServer {
         receiveMessage(response);
       }
     } else if (response.id === 'MSG_HISTORY') {
-      messageHistoryResponse(response);
+      socketEmitter.emit('response-messeges', { messages: response.payload.messages });
     } else if (response.type === 'MSG_READ') {
       messageIsRead(response);
     } else if (response.type === 'USER_EXTERNAL_LOGIN') {
@@ -48,6 +48,8 @@ export class RemoteServer {
       socketEmitter.emit('response-change-msg', { response: response.payload.message });
     } else if (response.type === 'MSG_DELETE') {
       socketEmitter.emit('response-delete-msg', { id: response.payload.message.id });
+    } else if (response.id === 'MSG_COUNT') {
+      socketEmitter.emit('response-msg-count', { messages: response.payload.messages });
     } else if (response.type === 'ERROR') {
       console.error(response.id, response.payload.error);
     }

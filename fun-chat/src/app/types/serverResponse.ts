@@ -1,4 +1,4 @@
-import { MessageHistoryRequest, MsgReadRequest } from './serverRequests';
+import { MsgReadRequest } from './serverRequests';
 
 interface AuthResponse {
   id: ResponseAuthenticationList;
@@ -99,11 +99,13 @@ interface CoreEditMsg {
 interface ReceivedMessage extends Omit<ResponseMsg, 'id'> {
   id: null;
 }
-interface MessageHistoryResponse extends Omit<MessageHistoryRequest, 'payload'> {
+type MessageHistoryResponse = {
+  id: 'MSG_COUNT' | 'MSG_HISTORY';
+  type: 'MSG_FROM_USER';
   payload: {
     messages: Message[];
   };
-}
+};
 
 interface ResponseError {
   id: 'MSG_SEND' | 'USER_ACTIVE' | 'USER_INACTIVE' | 'USER_LOGIN' | 'USER_LOGOUT';

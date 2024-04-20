@@ -1,6 +1,5 @@
 import { AppEvents, ChatEvents, UserListEvents } from '@alltypes/emit-events';
 import { EventEmitter } from '@shared/event-emitter';
-import { User } from '@alltypes/serverResponse';
 import { socketEmitter } from '@shared/const';
 import { UserListView } from './user-list-view';
 import { UserListModel } from './user-list-model';
@@ -26,13 +25,13 @@ export class UserListComtroller extends EventEmitter<UserListEvents> {
 
   private setSubscribers(): void {
     this.subs.push(
-      this.emitter.subscribe('users-get-active', (users: { data: User[] }) => {
-        this.model.getUsers(users.data, this.view.setUserList.bind(this.view), 'active');
+      this.emitter.subscribe('users-get-active', ({ data }) => {
+        this.model.getUsers(data, this.view.setUserList.bind(this.view), 'active');
       })
     );
     this.subs.push(
-      this.emitter.subscribe('users-get-inactive', (users: { data: User[] }) => {
-        this.model.getUsers(users.data, this.view.setUserList.bind(this.view), 'inactive');
+      this.emitter.subscribe('users-get-inactive', ({ data }) => {
+        this.model.getUsers(data, this.view.setUserList.bind(this.view), 'inactive');
       })
     );
     this.subs.push(socketEmitter.subscribe('user-login', () => getUsers()));
@@ -43,6 +42,14 @@ export class UserListComtroller extends EventEmitter<UserListEvents> {
     this.subs.push(
       this.subscribe('list-user-active', ({ user }) => this.chatEmitter.emit('chat-conversation', { user }))
     );
+    this.subs.push(
+      socketEmitter.subscribe('response-msg-count', ({ messages }) =>
+        this.model.countUnreadMessages(messages, this.view.setUserList.bind(this.view))
+      )
+    );
+    this.subs.push(socketEmitter.subscribe('msg-read', () => getUsers()));
+    this.subs.push(socketEmitter.subscribe('msg-receive', () => getUsers()));
+    this.subs.push(socketEmitter.subscribe('response-delete-msg', () => getUsers()));
   }
 
   public getUserListView(): HTMLDivElement {

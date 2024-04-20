@@ -1,5 +1,5 @@
-import { User } from '@alltypes/serverResponse';
-import { getUsers } from '../../../web-socket.ts/socket-actions';
+import { Message, User } from '@alltypes/serverResponse';
+import { getUsers, getMessageHistoryWithUser } from '../../../web-socket.ts/socket-actions';
 
 export class UserListModel {
   private usersData: User[] = [];
@@ -8,16 +8,39 @@ export class UserListModel {
 
   private inactiveUsers: User[] = [];
 
+  private unreadMesages = new Map<string, number>();
+
   constructor(private userName: string) {
     getUsers();
   }
 
-  public getUsers(users: User[], callback: (users: User[]) => void, type: 'active' | 'inactive'): void {
-    users.forEach((user, index) => {
-      if (user.login === this.userName) {
-        users.splice(index, 1);
+  public countUnreadMessages(
+    messages: Message[],
+    callback: (users: User[], counters?: Map<string, number>) => void
+  ): void {
+    let count = 0;
+    let author = '';
+    messages.forEach((message) => {
+      if (message.to === this.userName && !message.status.isReaded) {
+        author = message.from;
+        count += 1;
       }
     });
+    if (author) {
+      this.unreadMesages.set(author, count);
+      callback([...this.activeUsers, ...this.inactiveUsers], this.unreadMesages);
+    }
+  }
+
+  public getUsers(users: User[], callback: (users: User[]) => void, type: 'active' | 'inactive'): void {
+    [...users].forEach((user, index) => {
+      if (user.login === this.userName) {
+        users.splice(index, 1);
+      } else {
+        getMessageHistoryWithUser(user.login, 'MSG_COUNT');
+      }
+    });
+
     if (type === 'active') {
       this.activeUsers = users;
     } else {
@@ -26,13 +49,13 @@ export class UserListModel {
     callback([...this.activeUsers, ...this.inactiveUsers]);
   }
 
-  public search(value: string, callback: (users: User[]) => void) {
+  public search(value: string, callback: (users: User[], counters?: Map<string, number>) => void) {
     const result: User[] = [];
     [...this.activeUsers, ...this.inactiveUsers].forEach((user) => {
       if (user.login.toLowerCase().includes(value.toLowerCase())) {
         result.push(user);
       }
     });
-    callback(result);
+    callback(result, this.unreadMesages);
   }
 }

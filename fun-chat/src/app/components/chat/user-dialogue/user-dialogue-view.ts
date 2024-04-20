@@ -32,6 +32,13 @@ export class UserDialogueView {
 
   private status: HTMLDivElement = div({});
 
+  private historyDivider: HTMLDivElement = div(
+    { className: 'dialogue__history' },
+    div({ className: 'dialogue__history-text', textContent: 'New mesegaes' })
+  );
+
+  private isHistoryDivider = false;
+
   private autoScroll = false;
 
   private messageId = '';
@@ -58,6 +65,7 @@ export class UserDialogueView {
       this.messageId = '';
       this.msg.value = '';
     }
+    this.clearHistoryDevider();
   };
 
   public editMessage(messageId: string, text: string): void {
@@ -101,6 +109,10 @@ export class UserDialogueView {
   }
 
   public addMessageByinterlocutor(message: Message): void {
+    if (!this.isHistoryDivider && !message.status.isReaded) {
+      this.isHistoryDivider = true;
+      this.content.append(this.historyDivider);
+    }
     const msg = new MessageController(this.chatEmitter, message);
     this.conversation.push(msg);
     this.addMessageToConversation(msg.addMessageByinterlocutor());
@@ -118,11 +130,28 @@ export class UserDialogueView {
     this.content.append(cover);
 
     this.autoScroll = true;
-    this.content.scrollTop = this.content.scrollHeight;
-    requestAnimationFrame(() => {
-      this.autoScroll = false;
-    });
+    const heightGap = 230;
 
+    if (this.isHistoryDivider) {
+      this.content.scrollTop = this.historyDivider.offsetTop - heightGap;
+    } else {
+      this.content.scrollTop = this.content.scrollHeight;
+    }
+
+    const timeToAnotherHeightCheck = 500;
+    let scrollPosition = this.content.scrollTop;
+    const scrollCheckInterval = setInterval(() => {
+      if (document.visibilityState === 'visible') {
+        if (this.content.scrollTop === scrollPosition) {
+          requestAnimationFrame(() => {
+            this.autoScroll = false;
+          });
+          clearInterval(scrollCheckInterval);
+        } else {
+          scrollPosition = this.content.scrollTop;
+        }
+      }
+    }, timeToAnotherHeightCheck);
     this.addIsReadListeners();
   }
 
@@ -138,12 +167,15 @@ export class UserDialogueView {
 
   private clickMesages = (): void => {
     this.chatEmitter.emit('chat-change-read-status', { status: true });
+    this.clearHistoryDevider();
     this.removeIsReadListeners();
   };
 
   private scrollMessages = (): void => {
+    console.log(!this.autoScroll);
     if (!this.autoScroll) {
       this.chatEmitter.emit('chat-change-read-status', { status: true });
+      this.clearHistoryDevider();
       this.removeIsReadListeners();
     }
   };
@@ -152,10 +184,19 @@ export class UserDialogueView {
     return this.root;
   }
 
+  private clearHistoryDevider(): void {
+    this.isHistoryDivider = false;
+    this.historyDivider.remove();
+    this.content.scrollTop = this.content.scrollHeight;
+  }
+
   public remove(): void {
     this.clear();
+    this.autoScroll = true;
     this.conversation.forEach((msg: MessageController) => msg.remove());
     this.conversation.length = 0;
+    this.isHistoryDivider = false;
+    this.historyDivider.remove();
   }
 
   public clear(): void {

@@ -4,7 +4,6 @@ import {
   ResponseError,
   ResponseMsg,
   ResponseUsers,
-  MessageHistoryResponse,
   MsgReadResponse,
 } from '@alltypes/serverResponse';
 import { socketEmitter } from '@shared/const';
@@ -37,10 +36,6 @@ function logOut(response: AuthResponse | ResponseError): void {
   }
 }
 
-function messageHistoryResponse(response: MessageHistoryResponse): void {
-  socketEmitter.emit('response-messeges', { messages: response.payload.messages });
-}
-
 function messageIsRead(response: MsgReadResponse): void {
   socketEmitter.emit('msg-read', {
     id: response.payload.message.id,
@@ -48,4 +43,4 @@ function messageIsRead(response: MsgReadResponse): void {
   });
 }
 
-export { getUsers, receiveMessage, sendMessage, logIn, logOut, messageHistoryResponse, messageIsRead };
+export { getUsers, receiveMessage, sendMessage, logIn, logOut, messageIsRead };

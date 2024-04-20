@@ -6,6 +6,7 @@
   width: 25%;
   font-size: 20px;
   padding: 1%;
+  position: relative;
 
   &__search {
     padding: 5px;
@@ -19,6 +20,14 @@
   &__users {
     border-top: 1px solid var(--light-4);
     padding-top: 1%;
+  }
+
+  &__count {
+    border-radius: 50%;
+    border: 1px solid var(--green);
+    padding: 1px 7px;
+    position: absolute;
+    left: 80%;
   }
 
   &__item {

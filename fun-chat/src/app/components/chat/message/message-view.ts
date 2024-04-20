@@ -55,7 +55,6 @@ export class MessageView {
     const msgType = 'dialogue__message-to';
     this.status.textContent = 'sent';
     this.setStatus(message.status.isDelivered, message.status.isReaded, message.status.isEdited);
-    this.message.addEventListener('contextmenu', this.clickMenu);
     return this.addMessageToConversation(message, { author, msgType });
   }
 
@@ -71,7 +70,9 @@ export class MessageView {
     const msgHeader = div({ className: 'dialogue__msg-header' }, label, time);
     const container = div({ className: 'statuses' }, this.edit, this.status);
     const msg = div({ className: msgType }, msgHeader, this.text, container);
-
+    if (msgType === 'dialogue__message-to') {
+      msg.addEventListener('contextmenu', this.clickMenu);
+    }
     this.message.append(msg);
     return this.message;
   }

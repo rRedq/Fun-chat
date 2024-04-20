@@ -23,8 +23,8 @@ interface AppEvents {
     response: CoreEditMsg;
   };
   'response-delete-msg': { id: string };
+  'response-msg-count': { messages: Message[] };
 }
-// Переписать на request-msg / response-auth...
 
 interface UserListEvents {
   'list-input': { value: string };

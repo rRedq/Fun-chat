@@ -1,5 +1,5 @@
 import { UserData } from '@alltypes/common';
-import { MessageHistoryRequest, MsgReadRequest } from '@alltypes/serverRequests';
+import { MsgReadRequest } from '@alltypes/serverRequests';
 import { RequestMsg, RequestUsers, ResponseAuthenticationList } from '@alltypes/serverResponse';
 
 const authenticationData = ({ name, password }: UserData, type: ResponseAuthenticationList) => {
@@ -23,18 +23,6 @@ const sendMessageToServer = (message: string, receiver: string): RequestMsg => {
       message: {
         to: message,
         text: receiver,
-      },
-    },
-  };
-};
-
-const messageHistory = (login: string): MessageHistoryRequest => {
-  return {
-    id: 'MSG_HISTORY',
-    type: 'MSG_FROM_USER',
-    payload: {
-      user: {
-        login,
       },
     },
   };
@@ -89,12 +77,4 @@ const msgEdit = (
   };
 };
 
-export {
-  authenticationData,
-  authenticatedUsers,
-  unauthorizedUsers,
-  sendMessageToServer,
-  messageHistory,
-  msgRead,
-  msgEdit,
-};
+export { authenticationData, authenticatedUsers, unauthorizedUsers, sendMessageToServer, msgRead, msgEdit };
