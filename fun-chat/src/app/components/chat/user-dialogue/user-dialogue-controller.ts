@@ -1,4 +1,4 @@
-import { AppEvents, ChatEvents } from '@alltypes/emit-events';
+import { ChatEvents } from '@alltypes/emit-events';
 import { EventEmitter } from '@shared/event-emitter';
 import { socketEmitter } from '@shared/const';
 import { UserDialogueView } from './user-dialogue-view';
@@ -13,7 +13,6 @@ export class UserDialogueComtroller {
   private subs: (() => void)[] = [];
 
   constructor(
-    private emitter: EventEmitter<AppEvents>,
     private chatEmitter: EventEmitter<ChatEvents>,
     userName: string
   ) {
@@ -39,14 +38,14 @@ export class UserDialogueComtroller {
   }
 
   private setSubscribers(): void {
-    this.subs.push(this.emitter.subscribe('msg-send', ({ message }) => this.view.addMessageByAuthor(message)));
+    this.subs.push(socketEmitter.subscribe('msg-send', ({ message }) => this.view.addMessageByAuthor(message)));
     this.subs.push(
-      this.emitter.subscribe('msg-receive', ({ message }) =>
+      socketEmitter.subscribe('msg-receive', ({ message }) =>
         this.model.isCurrentConversation(message, this.view.addMessageByinterlocutor.bind(this.view))
       )
     );
     this.subs.push(
-      this.emitter.subscribe('response-messeges', ({ messages }) =>
+      socketEmitter.subscribe('response-messeges', ({ messages }) =>
         this.model.getCurrentConversation(messages, this.view.createDialogue.bind(this.view))
       )
     );

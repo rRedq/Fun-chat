@@ -19,7 +19,6 @@ export class EventEmitter<T> {
   public emit<K extends keyof T>(eventName: K, data: T[K]): void {
     if (this.events.has(eventName)) {
       const events: Listener<T[keyof T]>[] = [...isNull(this.events.get(eventName)).reverse()];
-
       events.forEach((handler) => handler(data));
     }
   }

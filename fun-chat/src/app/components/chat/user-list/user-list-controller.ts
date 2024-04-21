@@ -1,4 +1,4 @@
-import { AppEvents, ChatEvents, UserListEvents } from '@alltypes/emit-events';
+import { ChatEvents, UserListEvents } from '@alltypes/emit-events';
 import { EventEmitter } from '@shared/event-emitter';
 import { socketEmitter } from '@shared/const';
 import { UserListView } from './user-list-view';
@@ -13,7 +13,6 @@ export class UserListComtroller extends EventEmitter<UserListEvents> {
   private subs: (() => void)[] = [];
 
   constructor(
-    private emitter: EventEmitter<AppEvents>,
     userName: string,
     private chatEmitter: EventEmitter<ChatEvents>
   ) {
@@ -25,12 +24,12 @@ export class UserListComtroller extends EventEmitter<UserListEvents> {
 
   private setSubscribers(): void {
     this.subs.push(
-      this.emitter.subscribe('users-get-active', ({ data }) => {
+      socketEmitter.subscribe('users-get-active', ({ data }) => {
         this.model.getUsers(data, this.view.setUserList.bind(this.view), 'active');
       })
     );
     this.subs.push(
-      this.emitter.subscribe('users-get-inactive', ({ data }) => {
+      socketEmitter.subscribe('users-get-inactive', ({ data }) => {
         this.model.getUsers(data, this.view.setUserList.bind(this.view), 'inactive');
       })
     );

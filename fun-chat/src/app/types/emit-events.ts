@@ -25,6 +25,7 @@ interface AppEvents {
   'response-delete-msg': { id: string };
   'response-msg-count': { messages: Message[] };
   'open-socket': { status: boolean };
+  'click-info': { direction: 'to' | 'from' };
 }
 
 interface UserListEvents {

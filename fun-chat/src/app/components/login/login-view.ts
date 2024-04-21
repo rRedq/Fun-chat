@@ -3,6 +3,8 @@ import { input, form, div, button, span } from '@utils/tag-create-functions';
 import { type EventEmitter } from '@shared/event-emitter';
 import { LoginInputNames } from '@alltypes/common';
 import { LoginEvents } from '@alltypes/emit-events';
+import { socketEmitter } from '@shared/const';
+import { appendChildren } from '@utils/dom-helpers';
 
 export class LoginView {
   private emitter: EventEmitter<LoginEvents>;
@@ -25,15 +27,18 @@ export class LoginView {
     required: 'true',
   });
 
-  private btn: HTMLButtonElement = button({ className: 'login__btn btn', textContent: 'Log in' });
+  private loginBtn: HTMLButtonElement = button({ className: 'login__btn btn', textContent: 'Log in' });
+
+  private infoBtn: HTMLButtonElement = button({ className: 'btn', textContent: 'Info' });
 
   constructor(emitter: EventEmitter<LoginEvents>) {
     this.emitter = emitter;
     this.createFieldCover(this.nameInput, 'name');
     this.createFieldCover(this.passwordInput, 'password');
-    this.form.append(this.btn);
+    appendChildren(this.form, [this.loginBtn, this.infoBtn]);
     this.setBtnState(true);
     this.form.addEventListener('submit', (event: Event) => this.emitter.emit('login-auth', { event }));
+    this.infoBtn.addEventListener('click', () => socketEmitter.emit('click-info', { direction: 'to' }));
   }
 
   private createFieldCover(field: HTMLInputElement, name: LoginInputNames): void {
@@ -59,7 +64,7 @@ export class LoginView {
   }
 
   public setBtnState(value: boolean): void {
-    this.btn.disabled = value;
+    this.loginBtn.disabled = value;
   }
 
   public showModal(str: string): void {

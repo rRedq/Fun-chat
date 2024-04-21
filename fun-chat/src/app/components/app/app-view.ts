@@ -9,12 +9,14 @@ export class AppView {
   }
 
   public createLoginPage(login: HTMLDivElement): void {
-    this.app.replaceChildren();
     this.app.append(login);
   }
 
   public createChatPage(chat: HTMLDivElement): void {
-    this.app.replaceChildren();
     this.app.append(chat);
+  }
+
+  public createInfoPage(info: HTMLDivElement): void {
+    this.app.append(info);
   }
 }

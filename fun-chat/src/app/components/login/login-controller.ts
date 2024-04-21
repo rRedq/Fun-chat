@@ -1,21 +1,19 @@
 import { EventEmitter } from '@shared/event-emitter';
 import { LoginInputNames } from '@alltypes/common';
-import { AppEvents, LoginEvents } from '@alltypes/emit-events';
+import { LoginEvents } from '@alltypes/emit-events';
+import { socketEmitter } from '@shared/const';
 import { LoginModel } from './login-model';
 import { LoginView } from './login-view';
 
 export class LoginController extends EventEmitter<LoginEvents> {
   private loginModel: LoginModel;
 
-  private emitter: EventEmitter<AppEvents>;
-
   private loginView: LoginView = new LoginView(this);
 
   private subs: (() => void)[] = [];
 
-  constructor(emitter: EventEmitter<AppEvents>) {
+  constructor() {
     super();
-    this.emitter = emitter;
     this.loginModel = new LoginModel();
     this.setSubscribers();
   }
@@ -29,17 +27,16 @@ export class LoginController extends EventEmitter<LoginEvents> {
     this.subs.push(this.subscribe('login-auth', (data: { event: Event }) => this.submitForm(data.event)));
 
     this.subs.push(
-      this.emitter.subscribe('app-auth-error', (data: { error: string }) => this.loginView.showModal(data.error))
+      socketEmitter.subscribe('app-auth-error', (data: { error: string }) => this.loginView.showModal(data.error))
     );
-    this.subs.push(
-      this.emitter.subscribe('app-auth-success', () => {
-        this.loginModel.addUser();
-        this.removeLogin();
-      })
-    );
+    const login = socketEmitter.subscribe('app-auth-success', () => {
+      this.loginModel.addUser();
+      this.removeLogin();
+      login();
+    });
   }
 
-  public changeInputValue(input: LoginInputNames, value: string): void {
+  private changeInputValue(input: LoginInputNames, value: string): void {
     const text = this.loginModel.checkInputValue(input, value);
     if (text) {
       this.loginView.setInputState(input, true, text);
@@ -64,7 +61,7 @@ export class LoginController extends EventEmitter<LoginEvents> {
     return this.loginView.getRoot();
   }
 
-  private removeLogin(): void {
+  public removeLogin(): void {
     this.subs.forEach((unsubscribe: () => void) => unsubscribe());
 
     this.loginView.removeLoginView();
