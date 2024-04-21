@@ -1,5 +1,5 @@
-import { LoginInputNames } from '@alltypes/common';
-import { setStorage } from '@utils/storage';
+import { LoginInputNames, UserData } from '@alltypes/common';
+import { getStorage, setStorage } from '@utils/storage';
 import { sendAuthentication } from '../../web-socket.ts/socket-actions';
 
 export class LoginModel {
@@ -49,10 +49,9 @@ export class LoginModel {
   }
 
   public addUser(): void {
-    setStorage({ name: this.name, password: this.password });
-  }
-
-  public logout(): void {
-    sendAuthentication({ name: this.name, password: this.password }, 'USER_LOGOUT');
+    const user: UserData | null = getStorage();
+    if (!user) {
+      setStorage({ name: this.name, password: this.password });
+    }
   }
 }

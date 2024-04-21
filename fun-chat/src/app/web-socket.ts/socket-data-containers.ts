@@ -52,29 +52,4 @@ const msgRead = (id: string): MsgReadRequest => {
   };
 };
 
-const msgEdit = (
-  id: string,
-  text: string
-): {
-  id: 'MSG_EDIT';
-  type: 'MSG_EDIT';
-  payload: {
-    message: {
-      id: string;
-      text: string;
-    };
-  };
-} => {
-  return {
-    id: 'MSG_EDIT',
-    type: 'MSG_EDIT',
-    payload: {
-      message: {
-        id,
-        text,
-      },
-    },
-  };
-};
-
-export { authenticationData, authenticatedUsers, unauthorizedUsers, sendMessageToServer, msgRead, msgEdit };
+export { authenticationData, authenticatedUsers, unauthorizedUsers, sendMessageToServer, msgRead };

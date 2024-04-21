@@ -1,0 +1,51 @@
+.overlay {
+  position: fixed;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(55, 55, 55, 0.719);
+  top: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.modal {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  font-size: 25px;
+  font-weight: bold;
+  gap: 10px;
+  min-width: 200px;
+  min-height: 50px;
+  margin: 20px;
+  padding: 20px;
+  border-radius: 5px;
+  background: var(--light-2);
+  z-index: 3;
+  transform: scale(0);
+  transition: all 0.5s;
+  color: var(--light-4);
+  user-select: none;
+
+  &-active {
+    transform: scale(1);
+  }
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 8px solid var(--light-1);
+  border-radius: 50%;
+  border-top: 8px solid var(--light-3);
+  animation: spin 2s linear infinite;
+}

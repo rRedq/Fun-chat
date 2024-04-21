@@ -34,7 +34,7 @@ export class UserDialogueView {
 
   private historyDivider: HTMLDivElement = div(
     { className: 'dialogue__history' },
-    div({ className: 'dialogue__history-text', textContent: 'New mesegaes' })
+    div({ className: 'dialogue__history-text', textContent: 'New messages' })
   );
 
   private isHistoryDivider = false;

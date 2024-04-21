@@ -1,27 +1,62 @@
 import { WebSocketResponse } from '@alltypes/serverResponse';
 import { socketEmitter } from '@shared/const';
+import { Modal } from '@components/modal/modal';
 import { logIn, logOut, receiveMessage, sendMessage, messageIsRead } from './socket-responses';
 
 export class RemoteServer {
   private webSocket: WebSocket;
 
-  constructor(url: string) {
+  private socketConnection = false;
+
+  constructor(private url: string) {
     this.webSocket = new WebSocket(url);
-    this.webSocket.onmessage = (event) => {
-      this.serverResponse(event.data);
-    };
+    this.webSocket.addEventListener('open', () => socketEmitter.emit('open-socket', { status: true }));
+    this.addSocketEventListeners();
   }
+
+  private addSocketEventListeners(): void {
+    this.webSocket.addEventListener('message', this.serverResponse);
+    this.webSocket.addEventListener('close', this.onClose);
+  }
+
+  private removeSocketEventListeners(): void {
+    this.webSocket.addEventListener('message', this.serverResponse);
+    this.webSocket.addEventListener('close', this.onClose);
+  }
+
+  private onClose = (): void => {
+    this.removeSocketEventListeners();
+    const errorModal = new Modal();
+    errorModal.createReconnectModal();
+
+    const timeToAnotherCheck = 4000;
+    const interval = setInterval(async () => {
+      this.webSocket = new WebSocket(this.url);
+      const response = await this.connection();
+
+      if (response) {
+        errorModal.closeModal();
+        this.addSocketEventListeners();
+        clearInterval(interval);
+        socketEmitter.emit('open-socket', { status: true });
+      }
+    }, timeToAnotherCheck);
+  };
 
   public async serverRequest(data: string): Promise<void> {
-    const isConnect = await this.isConnection();
-    if (!isConnect) return;
-    this.webSocket.send(data);
+    if (this.socketConnection) {
+      this.webSocket.send(data);
+    } else {
+      const response: boolean = await this.connection();
+      if (response) {
+        this.webSocket.send(data);
+      }
+    }
   }
 
-  private serverResponse(data: string): void {
-    const response: WebSocketResponse = JSON.parse(data);
+  private serverResponse(event: MessageEvent<string>): void {
+    const response: WebSocketResponse = JSON.parse(event.data);
     console.log(response);
-
     if (response.id === 'USER_LOGIN') {
       logIn(response);
     } else if (response.type === 'USER_LOGOUT') {
@@ -55,26 +90,19 @@ export class RemoteServer {
     }
   }
 
-  private async isConnection(): Promise<boolean> {
-    try {
-      return await this.connection();
-    } catch (error) {
-      console.error(error);
-      return false;
-    }
-  }
-
   private connection(): Promise<boolean> {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
+      const timeIntervalToCheck = 50;
       const interval = setInterval(() => {
         if (this.webSocket.readyState === WebSocket.OPEN) {
           clearInterval(interval);
+          this.socketConnection = true;
           resolve(true);
+        } else {
+          this.socketConnection = false;
+          resolve(false);
         }
-      }, 50);
-      this.webSocket.onerror = () => {
-        reject(new Error('server unavailable'));
-      };
+      }, timeIntervalToCheck);
     });
   }
 }

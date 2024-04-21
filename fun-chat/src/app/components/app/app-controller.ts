@@ -7,38 +7,36 @@ import { AppView } from './app-view';
 import { AppModel } from './app-model';
 
 export class AppController {
-  private appView: AppView = new AppView();
+  private view: AppView = new AppView();
 
-  private appModel: AppModel = new AppModel();
+  private model: AppModel = new AppModel();
 
   private emitter: EventEmitter<AppEvents> = socketEmitter;
 
   constructor() {
-    this.appModel.init(this.createLoginPage.bind(this));
     this.setSubscribers();
+    this.createLoginPage();
   }
 
   private setSubscribers(): void {
-    this.emitter.subscribe('app-auth-success', (data: { login: string }) => {
-      this.createChatPage(data.login);
-      this.appModel.setUserState();
-    });
+    this.emitter.subscribe('app-auth-success', (data: { login: string }) => this.createChatPage(data.login));
 
-    this.emitter.subscribe('app-logout', () => this.appModel.userLogout());
+    this.emitter.subscribe('app-logout', () => this.model.userLogout());
 
     this.emitter.subscribe('app-logout-success', () => {
-      this.appModel.removeUser();
+      this.model.removeUser();
       this.createLoginPage();
     });
+    socketEmitter.subscribe('open-socket', () => this.model.isAuth());
   }
 
   private createLoginPage(): void {
     const login: HTMLDivElement = new LoginController(this.emitter).getLoginViewRoot();
-    this.appView.createLoginPage(login);
+    this.view.createLoginPage(login);
   }
 
   private createChatPage(login: string): void {
     const chat: HTMLDivElement = new ChatController(this.emitter, login).getChatViewRoot();
-    this.appView.createChatPage(chat);
+    this.view.createChatPage(chat);
   }
 }
