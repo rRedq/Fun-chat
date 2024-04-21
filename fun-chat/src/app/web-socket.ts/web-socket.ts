@@ -10,7 +10,10 @@ export class RemoteServer {
 
   constructor(private url: string) {
     this.webSocket = new WebSocket(url);
-    this.webSocket.addEventListener('open', () => socketEmitter.emit('open-socket', { status: true }));
+    this.webSocket.addEventListener('open', () => {
+      this.socketConnection = true;
+      socketEmitter.emit('open-socket', { status: true });
+    });
     this.addSocketEventListeners();
   }
 
@@ -43,15 +46,17 @@ export class RemoteServer {
     }, timeToAnotherCheck);
   };
 
-  public async serverRequest(data: string): Promise<void> {
+  // public async serverRequest(data: string): Promise<void> {
+  public serverRequest(data: string): void {
     if (this.socketConnection) {
       this.webSocket.send(data);
-    } else {
-      const response: boolean = await this.connection();
-      if (response) {
-        this.webSocket.send(data);
-      }
     }
+    // else {
+    //   const response: boolean = await this.connection();
+    //   if (response) {
+    //     this.webSocket.send(data);
+    //   }
+    // }
   }
 
   private serverResponse(event: MessageEvent<string>): void {

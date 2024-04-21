@@ -63,7 +63,7 @@ export class MessageView {
     { author, msgType }: { author: string; msgType: string }
   ): HTMLDivElement {
     this.text.textContent = message.text;
-    const label = div({ textContent: author });
+    const label = div({ className: 'label', textContent: author });
     const time = div({
       textContent: new Date(message.datetime).toLocaleString('ru-RU', { timeZone: 'Europe/Moscow' }),
     });

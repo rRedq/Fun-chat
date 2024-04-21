@@ -21,6 +21,13 @@
   --red: #e45545;
   --green: #6d972e;
   --blue: #0353a4;
+
+  @media screen and (width < 800px) {
+    font-size: 13px;
+  }
+  @media screen and (width < 500px) {
+    font-size: 10px;
+  }
 }
 .app {
   min-height: 100vh;

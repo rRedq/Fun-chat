@@ -4,9 +4,9 @@
   align-items: center;
   flex-direction: column;
   gap: 7px;
-  min-width: 1024px;
-  width: 50svw;
-  margin: 1%;
+  max-width: 1050px;
+  width: 100vw;
+  padding: 1%;
 
   &__main {
     height: 600px;

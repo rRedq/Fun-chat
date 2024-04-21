@@ -8,12 +8,16 @@
   border-radius: 3px;
   flex-grow: 3;
   padding: 1%;
-  font-size: 20px;
+  font-size: 1.4rem;
+  @media screen and (width < 700px) {
+    font-size: 1rem;
+  }
 
   &__header {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    gap: 5%;
     padding: 0 20%;
     min-height: 35px;
     border-bottom: 1px solid var(--light-4);
@@ -76,6 +80,7 @@
   }
   &__msg-header {
     display: flex;
+    flex-wrap: wrap;
     justify-content: space-between;
     padding: 1% 2%;
   }
@@ -88,7 +93,6 @@
   &__msg-status {
     display: flex;
     padding: 1% 2%;
-    font-size: 16px;
   }
   &__history {
     position: relative;
@@ -111,5 +115,9 @@
       padding: 0 5%;
       position: relative;
     }
+  }
+  &__name {
+    white-space: nowrap;
+    overflow: hidden;
   }
 }
