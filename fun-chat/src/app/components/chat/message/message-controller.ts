@@ -14,11 +14,20 @@ export class MessageController {
 
   constructor(
     private chatEmitter: EventEmitter<ChatEvents>,
-    message: Message
+    message: Message,
+    callback: () => void
   ) {
     this.view = new MessageView(this);
     this.model = new MessageModel(message);
     this.setSubscribers();
+    const unsunscribe = socketEmitter.subscribe('response-delete-msg', ({ id }) => {
+      if (this.model.isCurrentMessage(id)) {
+        this.view.removeMessage();
+        callback();
+        unsunscribe();
+      }
+    });
+    this.subs.push(unsunscribe);
   }
 
   private setSubscribers(): void {
@@ -27,13 +36,6 @@ export class MessageController {
         this.model.updateMessage(response, this.view.editMessage.bind(this.view));
       })
     );
-    const deleteMsg = socketEmitter.subscribe('response-delete-msg', ({ id }) => {
-      if (this.model.isCurrentMessage(id)) {
-        this.view.removeMessage();
-        deleteMsg();
-      }
-    });
-    this.subs.push(deleteMsg);
   }
 
   public changeMessage = (): void => {

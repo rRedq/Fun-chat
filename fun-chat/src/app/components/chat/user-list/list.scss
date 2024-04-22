@@ -7,6 +7,9 @@
   font-size: 1.4rem;
   padding: 1%;
   position: relative;
+  @media screen and (width < 700px) {
+    font-size: 0.8rem;
+  }
 
   &__search {
     padding: 5px;
@@ -20,6 +23,7 @@
   &__users {
     border-top: 1px solid var(--light-4);
     padding-top: 1%;
+    height: 94%;
     overflow-y: scroll;
     scrollbar-width: thin;
   }

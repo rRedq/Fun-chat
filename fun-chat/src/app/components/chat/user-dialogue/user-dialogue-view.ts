@@ -41,7 +41,7 @@ export class UserDialogueView {
 
   private isHistoryDivider = false;
 
-  private autoScroll = false;
+  private isScroll = false;
 
   private messageId = '';
 
@@ -54,6 +54,8 @@ export class UserDialogueView {
     this.form.addEventListener('submit', this.submitMessage);
     this.content.addEventListener('click', () => MessageView.removeMenu());
     this.cancelEditBtn.addEventListener('click', this.clearEditState);
+    this.content.addEventListener('click', this.clickMesages);
+    this.content.addEventListener('wheel', this.scrollMessages);
     this.msg.addEventListener('keyup', () => {
       if (this.msg.value.trim().length > 0) {
         this.btn.disabled = false;
@@ -68,7 +70,7 @@ export class UserDialogueView {
     if (!this.messageId && this.msg.value.trim().length > 0) {
       this.chatEmitter.emit('chat-msg', { text: this.msg.value });
       this.chatEmitter.emit('chat-change-read-status', { status: true });
-      this.removeIsReadListeners();
+      this.isScroll = false;
       this.msg.value = '';
     } else if (this.messageId && this.msg.value.trim().length > 0) {
       this.chatEmitter.emit('change-msg-success', { id: this.messageId, text: this.msg.value });
@@ -122,23 +124,31 @@ export class UserDialogueView {
       this.isHistoryDivider = true;
       this.content.append(this.historyDivider);
     }
-    const msg = new MessageController(this.chatEmitter, message);
+    this.isScroll = true;
+    const msg = new MessageController(this.chatEmitter, message, this.checkContentAfterDelete.bind(this));
     this.conversation.push(msg);
     this.addMessageToConversation(msg.addMessageByinterlocutor());
   }
 
   public addMessageByAuthor(message: Message): void {
-    const msg = new MessageController(this.chatEmitter, message);
+    const msg = new MessageController(this.chatEmitter, message, this.checkContentAfterDelete.bind(this));
     this.conversation.push(msg);
     this.addMessageToConversation(msg.addMessageByAuthor());
   }
 
+  private checkContentAfterDelete(): void {
+    if (this.content.children.length === 1 && this.content.firstChild === this.historyDivider) {
+      this.historyDivider.remove();
+    }
+    if (this.content.children.length === 0) {
+      this.content.append(this.placeholder);
+    }
+  }
+
   private addMessageToConversation(cover: HTMLDivElement): void {
     this.placeholder.remove();
-
     this.content.append(cover);
 
-    this.autoScroll = true;
     const heightGap = 230;
 
     if (this.isHistoryDivider) {
@@ -146,45 +156,21 @@ export class UserDialogueView {
     } else {
       this.content.scrollTop = this.content.scrollHeight;
     }
-
-    const timeToAnotherHeightCheck = 500;
-    let scrollPosition = this.content.scrollTop;
-    const scrollCheckInterval = setInterval(() => {
-      if (document.visibilityState === 'visible') {
-        if (this.content.scrollTop === scrollPosition) {
-          requestAnimationFrame(() => {
-            this.autoScroll = false;
-          });
-          clearInterval(scrollCheckInterval);
-        } else {
-          scrollPosition = this.content.scrollTop;
-        }
-      }
-    }, timeToAnotherHeightCheck);
-    this.addIsReadListeners();
   }
-
-  private addIsReadListeners(): void {
-    this.content.addEventListener('scroll', this.scrollMessages);
-    this.content.addEventListener('click', this.clickMesages);
-  }
-
-  private removeIsReadListeners(): void {
-    this.content.removeEventListener('scroll', this.scrollMessages);
-    this.content.removeEventListener('click', this.clickMesages);
-  }
-
-  private clickMesages = (): void => {
-    this.chatEmitter.emit('chat-change-read-status', { status: true });
-    this.clearHistoryDevider();
-    this.removeIsReadListeners();
-  };
 
   private scrollMessages = (): void => {
-    if (!this.autoScroll) {
+    if (this.isScroll) {
       this.chatEmitter.emit('chat-change-read-status', { status: true });
       this.clearHistoryDevider();
-      this.removeIsReadListeners();
+      this.isScroll = false;
+    }
+  };
+
+  private clickMesages = (): void => {
+    if (this.isScroll) {
+      this.chatEmitter.emit('chat-change-read-status', { status: true });
+      this.clearHistoryDevider();
+      this.isScroll = false;
     }
   };
 
@@ -200,7 +186,7 @@ export class UserDialogueView {
 
   public remove(): void {
     this.clearEditState();
-    this.autoScroll = true;
+    this.isScroll = false;
     this.conversation.forEach((msg: MessageController) => msg.remove());
     this.conversation.length = 0;
     this.isHistoryDivider = false;

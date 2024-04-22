@@ -46,22 +46,14 @@ export class RemoteServer {
     }, timeToAnotherCheck);
   };
 
-  // public async serverRequest(data: string): Promise<void> {
   public serverRequest(data: string): void {
     if (this.socketConnection) {
       this.webSocket.send(data);
     }
-    // else {
-    //   const response: boolean = await this.connection();
-    //   if (response) {
-    //     this.webSocket.send(data);
-    //   }
-    // }
   }
 
   private serverResponse(event: MessageEvent<string>): void {
     const response: WebSocketResponse = JSON.parse(event.data);
-    console.log(response);
     if (response.id === 'USER_LOGIN') {
       logIn(response);
     } else if (response.type === 'USER_LOGOUT') {
