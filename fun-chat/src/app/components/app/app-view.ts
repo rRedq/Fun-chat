@@ -19,4 +19,8 @@ export class AppView {
   public createInfoPage(info: HTMLDivElement): void {
     this.app.append(info);
   }
+
+  public createErrorPage(error: HTMLDivElement): void {
+    this.app.append(error);
+  }
 }

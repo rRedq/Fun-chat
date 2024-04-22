@@ -7,7 +7,7 @@ export class LoginModel {
 
   private password = '';
 
-  private nameGenrealRegexp: RegExp = /^(?=.{3,60}$)[A-Z][\\-a-zA-z]+$/;
+  private nameGenrealRegexp: RegExp = /^(?=.{3,10}$)[A-Z][\\-a-zA-z]+$/;
 
   private passwordGeneralRegExp: RegExp = /^(?=.{4,60}$)[A-Z][\\-a-zA-z]+$/;
 
@@ -27,7 +27,7 @@ export class LoginModel {
     } else if (!this.englishTextRegEx.test(value)) {
       message = 'The text must be in English';
     } else if (param === 'name' && !this.nameGenrealRegexp.test(value)) {
-      message = 'The name must consist of at least 3 letters';
+      message = 'The name must consist of at least 3 but no more than 10 letters';
     } else if (param === 'password' && !this.passwordGeneralRegExp.test(value)) {
       message = 'The password must consist of at least 4 letters';
     } else {

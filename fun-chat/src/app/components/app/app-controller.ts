@@ -4,6 +4,8 @@ import { socketEmitter } from '@shared/const';
 import { InfoPage } from '@components/info/info';
 import { getStorage } from '@utils/storage';
 import { UserData } from '@alltypes/common';
+import { Router } from '@utils/router';
+import { ErrorPage } from '@components/error-page/error';
 import { AppView } from './app-view';
 import { AppModel } from './app-model';
 
@@ -12,11 +14,15 @@ export class AppController {
 
   private model: AppModel = new AppModel();
 
-  private login: LoginController | undefined;
+  private login?: LoginController;
 
-  private chat: ChatController | undefined;
+  private chat?: ChatController;
 
-  private info: InfoPage | undefined;
+  private info?: InfoPage;
+
+  private error?: ErrorPage;
+
+  private router: Router = new Router(this.setPage.bind(this));
 
   private currentPage: 'login' | 'chat' | 'info' = 'login';
 
@@ -44,6 +50,7 @@ export class AppController {
 
   private createLoginPage(): void {
     this.clearApp();
+    this.router.setPath('login');
     this.login = new LoginController();
     this.view.createLoginPage(this.login.getLoginViewRoot());
     this.currentPage = 'login';
@@ -51,6 +58,7 @@ export class AppController {
 
   private createChatPage(login: string): void {
     this.clearApp();
+    this.router.setPath('chat');
     this.chat = new ChatController(login);
     this.view.createChatPage(this.chat.getChatViewRoot());
     this.currentPage = 'chat';
@@ -58,6 +66,7 @@ export class AppController {
 
   private createInfoPage(direction: 'to' | 'from'): void {
     this.clearApp();
+    this.router.setPath('info');
     this.currentPage = 'info';
     if (direction === 'to') {
       this.info = new InfoPage();
@@ -72,6 +81,33 @@ export class AppController {
     }
   }
 
+  public setPage(str: string): void {
+    const user: UserData | null = getStorage();
+    if (str === 'login') {
+      if (!user) {
+        this.createLoginPage();
+      } else {
+        this.createChatPage(user.name);
+      }
+    } else if (str === 'info') {
+      this.createInfoPage('to');
+    } else if (str === 'chat') {
+      if (user) {
+        this.createChatPage(user.name);
+      } else {
+        this.createLoginPage();
+      }
+    } else {
+      this.createErrorPage();
+    }
+  }
+
+  private createErrorPage(): void {
+    this.clearApp();
+    this.error = new ErrorPage();
+    this.view.createErrorPage(this.error.getErrorPage());
+  }
+
   private clearApp(): void {
     if (this.info) {
       this.info.removeInfoPage();
@@ -82,6 +118,9 @@ export class AppController {
     } else if (this.login) {
       this.login.removeLogin();
       this.login = undefined;
+    } else if (this.error) {
+      this.error.remove();
+      this.error = undefined;
     }
   }
 }
