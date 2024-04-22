@@ -90,6 +90,8 @@ export class RemoteServer {
       socketEmitter.emit('response-delete-msg', { id: response.payload.message.id });
     } else if (response.id === 'MSG_COUNT') {
       socketEmitter.emit('response-msg-count', { messages: response.payload.messages });
+    } else if (response.type === 'MSG_DELIVER') {
+      socketEmitter.emit('response-msg-deliver', { response: response.payload.message });
     } else if (response.type === 'ERROR') {
       console.error(response.id, response.payload.error);
     }

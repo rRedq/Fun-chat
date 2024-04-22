@@ -20,6 +20,8 @@
   &__users {
     border-top: 1px solid var(--light-4);
     padding-top: 1%;
+    overflow-y: scroll;
+    scrollbar-width: thin;
   }
 
   &__count {
@@ -27,10 +29,10 @@
     border: 1px solid var(--green);
     padding: 1px 7px;
     position: absolute;
-    right: 6%;
+    right: 12%;
     @media screen and (width < 700px) {
       padding: 1px 3px;
-      right: 8%;
+      right: 20%;
       font-size: 1rem;
     }
   }

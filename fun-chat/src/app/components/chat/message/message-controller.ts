@@ -45,13 +45,24 @@ export class MessageController {
   };
 
   public addMessageByAuthor(): HTMLDivElement {
-    const unsubscribe = socketEmitter.subscribe('msg-read', ({ id, isReaded }) => {
-      if (this.model.isCurrentMessage(id)) {
-        this.view.setStatus(false, isReaded);
-        unsubscribe();
-      }
-    });
-    this.subs.push(unsubscribe);
+    if (!this.model.getMessageStatus().isReaded) {
+      const unsubscribe = socketEmitter.subscribe('msg-read', ({ id, isReaded }) => {
+        if (this.model.isCurrentMessage(id)) {
+          this.view.setStatus(false, isReaded);
+          unsubscribe();
+        }
+      });
+      this.subs.push(unsubscribe);
+    }
+    if (!this.model.getMessageStatus().isDelivered) {
+      const unsubscribe = socketEmitter.subscribe('response-msg-deliver', ({ response }) => {
+        if (this.model.isCurrentMessage(response.id)) {
+          this.view.setStatus(response.status.isDelivered);
+          unsubscribe();
+        }
+      });
+      this.subs.push(unsubscribe);
+    }
 
     return this.view.addMessageByAuthor(this.model.getMessage());
   }

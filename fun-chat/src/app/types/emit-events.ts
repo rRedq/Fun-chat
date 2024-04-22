@@ -19,6 +19,14 @@ interface AppEvents {
   'msg-receive': { message: Message };
   'response-messeges': { messages: Message[] };
   'msg-read': { id: string; isReaded: boolean };
+  'response-msg-deliver': {
+    response: {
+      id: string;
+      status: {
+        isDelivered: boolean;
+      };
+    };
+  };
   'response-change-msg': {
     response: CoreEditMsg;
   };

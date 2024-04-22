@@ -133,6 +133,19 @@ type ResponseDeleteMsg = {
   };
 };
 
+type ResponseMsgDeliver = {
+  id: null;
+  type: 'MSG_DELIVER';
+  payload: {
+    message: {
+      id: string;
+      status: {
+        isDelivered: boolean;
+      };
+    };
+  };
+};
+
 type WebSocketResponse =
   | AuthResponse
   | ResponseError
@@ -144,7 +157,8 @@ type WebSocketResponse =
   | ResponseMsg
   | UserAuth
   | EditMsgResponse
-  | ResponseDeleteMsg;
+  | ResponseDeleteMsg
+  | ResponseMsgDeliver;
 
 type ResponseAuthenticationList = 'USER_LOGIN' | 'USER_LOGOUT';
 

@@ -59,7 +59,7 @@ export class UserDialogueComtroller {
         this.model.isInterlocutor(user, this.view.updateUserStatus.bind(this.view))
       )
     );
-    this.subs.push(socketEmitter.subscribe('response-delete-msg', () => this.view.clear()));
+    this.subs.push(socketEmitter.subscribe('response-delete-msg', () => this.view.clearEditState()));
   }
 
   public getUserListView(): HTMLDivElement {

@@ -12,6 +12,14 @@ export class MessageModel {
     return this.message.id === id;
   }
 
+  public getMessageStatus(): {
+    isDelivered: boolean;
+    isReaded: boolean;
+    isEdited: boolean;
+  } {
+    return this.message.status;
+  }
+
   public changeMessage(): { id: string; text: string } {
     return { id: this.message.id, text: this.message.text };
   }

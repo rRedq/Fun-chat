@@ -12,7 +12,7 @@ export class UserDialogueView {
 
   private content: HTMLDivElement = div(
     { className: 'dialogue__content' },
-    div({ textContent: 'Choose user for sending message...' })
+    div({ className: 'dialogue__fill', textContent: 'Choose user for sending message...' })
   );
 
   private msg: HTMLInputElement = input({
@@ -28,7 +28,7 @@ export class UserDialogueView {
 
   private root: HTMLDivElement = div({ className: 'dialogue' }, this.header, this.content, this.form);
 
-  private placeholder: HTMLDivElement = div({ textContent: 'Send your first message...' });
+  private placeholder: HTMLDivElement = div({ className: 'dialogue__fill', textContent: 'Send your first message...' });
 
   private status: HTMLDivElement = div({});
 
@@ -36,6 +36,8 @@ export class UserDialogueView {
     { className: 'dialogue__history' },
     div({ className: 'dialogue__history-text', textContent: 'New messages' })
   );
+
+  private cancelEditBtn = div({ className: 'dialogue__cancel', textContent: 'X' });
 
   private isHistoryDivider = false;
 
@@ -51,6 +53,14 @@ export class UserDialogueView {
   ) {
     this.form.addEventListener('submit', this.submitMessage);
     this.content.addEventListener('click', () => MessageView.removeMenu());
+    this.cancelEditBtn.addEventListener('click', this.clearEditState);
+    this.msg.addEventListener('keyup', () => {
+      if (this.msg.value.trim().length > 0) {
+        this.btn.disabled = false;
+      } else {
+        this.btn.disabled = true;
+      }
+    });
   }
 
   private submitMessage = (e: Event): void => {
@@ -62,8 +72,7 @@ export class UserDialogueView {
       this.msg.value = '';
     } else if (this.messageId && this.msg.value.trim().length > 0) {
       this.chatEmitter.emit('change-msg-success', { id: this.messageId, text: this.msg.value });
-      this.messageId = '';
-      this.msg.value = '';
+      this.clearEditState();
     }
     this.clearHistoryDevider();
   };
@@ -72,6 +81,7 @@ export class UserDialogueView {
     if (this.messageId !== messageId) {
       this.messageId = messageId;
       this.msg.value = text;
+      this.msg.after(this.cancelEditBtn);
     }
   }
 
@@ -79,7 +89,6 @@ export class UserDialogueView {
     this.remove();
     this.header.replaceChildren();
     this.msg.disabled = false;
-    this.btn.disabled = false;
     const name = div({ className: 'dialogue__name', textContent: `${user.login}` });
     const isOnline = user.isLogined ? 'online' : 'offline';
     this.status = div({ className: `dialogue__status-${isOnline}`, textContent: isOnline });
@@ -172,7 +181,6 @@ export class UserDialogueView {
   };
 
   private scrollMessages = (): void => {
-    console.log(!this.autoScroll);
     if (!this.autoScroll) {
       this.chatEmitter.emit('chat-change-read-status', { status: true });
       this.clearHistoryDevider();
@@ -191,7 +199,7 @@ export class UserDialogueView {
   }
 
   public remove(): void {
-    this.clear();
+    this.clearEditState();
     this.autoScroll = true;
     this.conversation.forEach((msg: MessageController) => msg.remove());
     this.conversation.length = 0;
@@ -199,8 +207,10 @@ export class UserDialogueView {
     this.historyDivider.remove();
   }
 
-  public clear(): void {
+  public clearEditState = (): void => {
     this.msg.value = '';
     this.messageId = '';
-  }
+    this.cancelEditBtn.remove();
+    this.btn.disabled = true;
+  };
 }
