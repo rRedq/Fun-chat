@@ -35,6 +35,7 @@ const baseConfig = {
       '@alltypes': path.resolve(__dirname, 'src/app/types/'),
       '@components': path.resolve(__dirname, 'src/app/components/'),
       '@shared': path.resolve(__dirname, 'src/app/shared/'),
+      '@socket': path.resolve(__dirname, 'src/app/web-socket/'),
     },
   },
   output: {

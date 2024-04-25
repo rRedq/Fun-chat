@@ -12,7 +12,8 @@
       "@alltypes/*": ["app/types/*"],
       "@utils/*": ["app/utils/*"],
       "@components/*": ["app/components/*"],
-      "@shared/*": ["app/shared/*"]
+      "@shared/*": ["app/shared/*"],
+      "@socket/*": ["app/web-socket/*"]
     }
   }
 }
