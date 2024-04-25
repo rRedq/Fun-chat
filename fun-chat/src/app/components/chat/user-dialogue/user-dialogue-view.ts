@@ -67,6 +67,7 @@ export class UserDialogueView {
 
   private submitMessage = (e: Event): void => {
     e.preventDefault();
+    MessageView.removeMenu();
     if (!this.messageId && this.msg.value.trim().length > 0) {
       this.chatEmitter.emit('chat-msg', { text: this.msg.value });
       this.chatEmitter.emit('chat-change-read-status', { status: true });
@@ -122,7 +123,7 @@ export class UserDialogueView {
   public addMessageByinterlocutor(message: Message): void {
     if (!this.isHistoryDivider && !message.status.isReaded) {
       this.isHistoryDivider = true;
-      this.content.append(this.historyDivider);
+      this.content.prepend(this.historyDivider);
     }
     this.isScroll = true;
     const msg = new MessageController(this.chatEmitter, message, this.checkContentAfterDelete.bind(this));
@@ -137,8 +138,11 @@ export class UserDialogueView {
   }
 
   private checkContentAfterDelete(): void {
-    if (this.content.children.length === 1 && this.content.firstChild === this.historyDivider) {
-      this.historyDivider.remove();
+    if (
+      this.content.firstChild === this.historyDivider ||
+      (this.content.children.length === 1 && this.content.lastChild === this.historyDivider)
+    ) {
+      this.clearHistoryDevider();
     }
     if (this.content.children.length === 0) {
       this.content.append(this.placeholder);
@@ -147,7 +151,7 @@ export class UserDialogueView {
 
   private addMessageToConversation(cover: HTMLDivElement): void {
     this.placeholder.remove();
-    this.content.append(cover);
+    this.content.prepend(cover);
 
     const heightGap = 230;
 
