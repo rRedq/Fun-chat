@@ -1,5 +1,5 @@
 import './error.scss';
-import { div } from '@utils/tag-create-functions';
+import { div } from '@utils/index';
 
 export class ErrorPage {
   private root: HTMLDivElement = div(

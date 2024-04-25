@@ -1,5 +1,5 @@
 import { Message, User } from '@alltypes/socketTypes';
-import { getMessageHistoryWithUser, getUsers } from '../../../web-socket/socket-actions';
+import { getMessageHistoryWithUser, getUsers } from '@socket/index';
 
 export class UserListModel {
   private activeUsers: User[] = [];

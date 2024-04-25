@@ -1,8 +1,8 @@
-import { User } from '@alltypes/socketTypes';
 import './list.scss';
-import { div, input } from '@utils/tag-create-functions';
+import { User } from '@alltypes/socketTypes';
+import { div, input } from '@utils/index';
 import { UserListEvents } from '@alltypes/emit-events';
-import { EventEmitter } from '@shared/event-emitter';
+import { EventEmitter } from '@shared/index';
 
 export class UserListView {
   private usersList: HTMLDivElement = div({ className: 'list__users' });

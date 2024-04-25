@@ -1,12 +1,7 @@
 import './chat.scss';
 import { ChatEvents } from '@alltypes/emit-events';
-import { EventEmitter } from '@shared/event-emitter';
-import { socketEmitter } from '@shared/const';
-import { ChatView } from './chat-view';
-import { FooterView } from '../footer/footer-view';
-import { UserListComtroller } from '../user-list/user-list-controller';
-import { UserDialogueComtroller } from '../user-dialogue/user-dialogue-controller';
-import { HeaderView } from '../header/header-view';
+import { EventEmitter, socketEmitter } from '@shared/index';
+import { ChatView, FooterView, UserListComtroller, UserDialogueComtroller, HeaderView } from '@components/chat/index';
 
 export class ChatController extends EventEmitter<ChatEvents> {
   private chatView: ChatView;

@@ -1,9 +1,8 @@
 import { ChatEvents, UserListEvents } from '@alltypes/emit-events';
-import { EventEmitter } from '@shared/event-emitter';
-import { socketEmitter } from '@shared/const';
+import { EventEmitter, socketEmitter } from '@shared/index';
+import { getUsers } from '@socket/index';
 import { UserListView } from './user-list-view';
 import { UserListModel } from './user-list-model';
-import { getUsers } from '../../../web-socket/socket-actions';
 
 export class UserListComtroller extends EventEmitter<UserListEvents> {
   private view: UserListView;

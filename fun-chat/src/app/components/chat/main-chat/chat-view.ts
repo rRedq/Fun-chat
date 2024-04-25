@@ -1,4 +1,4 @@
-import { main, section } from '@utils/tag-create-functions';
+import { main, section } from '@utils/index';
 
 export class ChatView {
   private chat: HTMLDivElement;

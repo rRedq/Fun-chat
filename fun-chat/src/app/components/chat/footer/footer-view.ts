@@ -1,6 +1,6 @@
-import { gitUrl, rssUrl } from '@shared/const';
 import './footer.scss';
-import { a, div, image, section } from '@utils/tag-create-functions';
+import { gitUrl, rssUrl } from '@shared/index';
+import { a, div, image, section } from '@utils/index';
 import rssLogo from '@assets/rs_school.svg';
 
 export class FooterView {

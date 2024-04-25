@@ -1,6 +1,6 @@
 import './header.scss';
-import { socketEmitter } from '@shared/const';
-import { button, div, section } from '@utils/tag-create-functions';
+import { socketEmitter } from '@shared/index';
+import { button, div, section } from '@utils/index';
 
 export class HeaderView {
   private header: HTMLElement;

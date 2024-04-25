@@ -1,9 +1,8 @@
 import { ChatEvents } from '@alltypes/emit-events';
-import { EventEmitter } from '@shared/event-emitter';
-import { socketEmitter } from '@shared/const';
+import { EventEmitter, socketEmitter } from '@shared/index';
+import { editMsg } from '@socket/index';
 import { UserDialogueView } from './user-dialogue-view';
 import { UserDialogueModel } from './user-dialogue-model';
-import { editMsg } from '../../../web-socket/socket-actions';
 
 export class UserDialogueComtroller {
   private view: UserDialogueView;

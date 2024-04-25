@@ -1,5 +1,5 @@
 import './modal.scss';
-import { div } from '@utils/tag-create-functions';
+import { div } from '@utils/index';
 
 export class Modal {
   private modal = div(

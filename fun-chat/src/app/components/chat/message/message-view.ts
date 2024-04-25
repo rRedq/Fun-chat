@@ -1,7 +1,6 @@
 import './message.scss';
 import { Message } from '@alltypes/socketTypes';
-import { appendChildren } from '@utils/dom-helpers';
-import { div, p } from '@utils/tag-create-functions';
+import { div, p, appendChildren } from '@utils/index';
 import { type MessageController } from './message-controller';
 
 export class MessageView {

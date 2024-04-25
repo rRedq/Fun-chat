@@ -1,10 +1,8 @@
 import './login.scss';
-import { input, form, div, button, span } from '@utils/tag-create-functions';
-import { type EventEmitter } from '@shared/event-emitter';
 import { LoginInputNames } from '@alltypes/common';
 import { LoginEvents } from '@alltypes/emit-events';
-import { socketEmitter } from '@shared/const';
-import { appendChildren } from '@utils/dom-helpers';
+import { socketEmitter, EventEmitter } from '@shared/index';
+import { appendChildren, input, form, div, button, span } from '@utils/index';
 
 export class LoginView {
   private emitter: EventEmitter<LoginEvents>;

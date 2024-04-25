@@ -1,13 +1,12 @@
 import { LoginController } from '@components/login/login-controller';
-import { ChatController } from '@components/chat/main-chat/chat-controller';
-import { socketEmitter } from '@shared/const';
+import { ChatController } from '@components/chat/index';
+import { socketEmitter } from '@shared/index';
 import { InfoPage } from '@components/info/info';
-import { getStorage } from '@utils/storage';
+import { getStorage } from '@utils/index';
 import { UserData } from '@alltypes/common';
 import { Router } from '@utils/router';
 import { ErrorPage } from '@components/error-page/error';
-import { AppView } from './app-view';
-import { AppModel } from './app-model';
+import { AppView, AppModel } from '@components/app/index';
 
 export class AppController {
   private view: AppView = new AppView();

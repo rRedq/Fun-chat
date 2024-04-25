@@ -1,6 +1,6 @@
-import { gitUrl, socketEmitter } from '@shared/const';
 import './info.scss';
-import { a, button, div } from '@utils/tag-create-functions';
+import { gitUrl, socketEmitter } from '@shared/index';
+import { a, button, div } from '@utils/index';
 
 export class InfoPage {
   private backBtn: HTMLButtonElement = button({ className: 'btn', textContent: 'back' });

@@ -1,6 +1,6 @@
 import { UserData } from '@alltypes/common';
-import { deleteStorageKey, getStorage } from '@utils/storage';
-import { sendAuthentication } from '../../web-socket/socket-actions';
+import { deleteStorageKey, getStorage } from '@utils/index';
+import { sendAuthentication } from '@socket/index';
 
 export class AppModel {
   public isAuth(): void {

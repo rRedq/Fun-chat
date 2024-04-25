@@ -1,7 +1,6 @@
-import { EventEmitter } from '@shared/event-emitter';
+import { EventEmitter, socketEmitter } from '@shared/index';
 import { LoginInputNames } from '@alltypes/common';
 import { LoginEvents } from '@alltypes/emit-events';
-import { socketEmitter } from '@shared/const';
 import { LoginModel } from './login-model';
 import { LoginView } from './login-view';
 

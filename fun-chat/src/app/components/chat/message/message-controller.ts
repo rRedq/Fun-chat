@@ -1,9 +1,7 @@
 import { ChatEvents } from '@alltypes/emit-events';
-import { EventEmitter } from '@shared/event-emitter';
+import { EventEmitter, socketEmitter } from '@shared/index';
 import { Message } from '@alltypes/socketTypes';
-import { socketEmitter } from '@shared/const';
-import { MessageView } from './message-view';
-import { MessageModel } from './message-model';
+import { MessageView, MessageModel } from '@components/chat/index';
 
 export class MessageController {
   private subs: (() => void)[] = [];

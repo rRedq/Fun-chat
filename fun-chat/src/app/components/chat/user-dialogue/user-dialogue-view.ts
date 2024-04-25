@@ -1,11 +1,9 @@
-import { Message, User } from '@alltypes/socketTypes';
 import './dialugue.scss';
-import { button, div, form, input } from '@utils/tag-create-functions';
-import { appendChildren } from '@utils/dom-helpers';
+import { Message, User } from '@alltypes/socketTypes';
+import { button, div, form, input, appendChildren } from '@utils/index';
 import { ChatEvents } from '@alltypes/emit-events';
-import { EventEmitter } from '@shared/event-emitter';
-import { MessageController } from '../message/message-controller';
-import { MessageView } from '../message/message-view';
+import { EventEmitter } from '@shared/index';
+import { MessageController, MessageView } from '@components/chat/index';
 
 export class UserDialogueView {
   private header: HTMLDivElement = div({ className: 'dialogue__header' });
