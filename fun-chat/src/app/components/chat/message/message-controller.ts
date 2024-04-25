@@ -1,6 +1,6 @@
 import { ChatEvents } from '@alltypes/emit-events';
 import { EventEmitter } from '@shared/event-emitter';
-import { Message } from '@alltypes/serverResponse';
+import { Message } from '@alltypes/socketTypes';
 import { socketEmitter } from '@shared/const';
 import { MessageView } from './message-view';
 import { MessageModel } from './message-model';

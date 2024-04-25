@@ -1,4 +1,4 @@
-import { User } from '@alltypes/serverResponse';
+import { User } from '@alltypes/socketTypes';
 import './list.scss';
 import { div, input } from '@utils/tag-create-functions';
 import { UserListEvents } from '@alltypes/emit-events';

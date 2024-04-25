@@ -1,4 +1,4 @@
-import { Message, User } from '@alltypes/serverResponse';
+import { Message, User } from '@alltypes/socketTypes';
 import './dialugue.scss';
 import { button, div, form, input } from '@utils/tag-create-functions';
 import { appendChildren } from '@utils/dom-helpers';

@@ -1,5 +1,3 @@
-import { MsgReadRequest } from './serverRequests';
-
 interface AuthResponse {
   id: ResponseAuthenticationList;
   type: ResponseAuthenticationList;
@@ -44,18 +42,9 @@ interface RequestUsers extends Omit<ResponseUsers, 'payload'> {
   payload: null;
 }
 
-interface RequestMsg {
+interface ResponseMsg {
   id: 'MSG_SEND';
   type: 'MSG_SEND';
-  payload: {
-    message: {
-      to: string;
-      text: string;
-    };
-  };
-}
-
-interface ResponseMsg extends RequestMsg {
   payload: {
     message: Message;
   };
@@ -146,6 +135,16 @@ type ResponseMsgDeliver = {
   };
 };
 
+interface MsgReadRequest {
+  id: 'MSG_READ';
+  type: 'MSG_READ';
+  payload: {
+    message: {
+      id: string;
+    };
+  };
+}
+
 type WebSocketResponse =
   | AuthResponse
   | ResponseError
@@ -154,7 +153,6 @@ type WebSocketResponse =
   | ReceivedMessage
   | MessageHistoryResponse
   | MsgReadResponse
-  | ResponseMsg
   | UserAuth
   | EditMsgResponse
   | ResponseDeleteMsg
@@ -170,11 +168,6 @@ export {
   WebSocketResponse,
   User,
   RequestUsers,
-  RequestMsg,
-  ResponseMsg,
   Message,
-  ReceivedMessage,
-  MessageHistoryResponse,
-  MsgReadResponse,
   CoreEditMsg,
 };

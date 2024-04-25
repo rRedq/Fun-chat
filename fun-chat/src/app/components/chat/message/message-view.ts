@@ -1,5 +1,5 @@
 import './message.scss';
-import { Message } from '@alltypes/serverResponse';
+import { Message } from '@alltypes/socketTypes';
 import { appendChildren } from '@utils/dom-helpers';
 import { div, p } from '@utils/tag-create-functions';
 import { type MessageController } from './message-controller';

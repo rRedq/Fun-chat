@@ -1,5 +1,5 @@
 import { LoginInputNames } from './common';
-import { CoreEditMsg, Message, User } from './serverResponse';
+import { CoreEditMsg, Message, User } from './socketTypes';
 
 interface LoginEvents {
   'login-input': { value: string; name: LoginInputNames };

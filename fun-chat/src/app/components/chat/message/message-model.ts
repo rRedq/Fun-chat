@@ -1,4 +1,4 @@
-import { CoreEditMsg, Message } from '@alltypes/serverResponse';
+import { CoreEditMsg, Message } from '@alltypes/socketTypes';
 import { requestDeleteMsg } from '../../../web-socket.ts/socket-actions';
 
 export class MessageModel {

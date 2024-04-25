@@ -1,36 +1,80 @@
 import { serverUrl } from '@shared/const';
-
 import { UserData } from '@alltypes/common';
-import { RequestMsg, ResponseAuthenticationList } from '@alltypes/serverResponse';
-import { MsgReadRequest } from '@alltypes/serverRequests';
+import { ResponseAuthenticationList } from '@alltypes/socketTypes';
 import { RemoteServer } from './web-socket';
-import {
-  sendMessageToServer,
-  authenticatedUsers,
-  unauthorizedUsers,
-  authenticationData,
-  msgRead,
-} from './socket-data-containers';
+import { authenticatedUsers, unauthorizedUsers } from './socket-data-containers';
 
 export const webSocket = new RemoteServer(serverUrl);
-
-function sendMessage(receiver: string, msg: string): void {
-  const data: RequestMsg = sendMessageToServer(receiver, msg);
-  webSocket.serverRequest(JSON.stringify(data));
-}
 
 function getUsers(): void {
   webSocket.serverRequest(JSON.stringify(authenticatedUsers));
   webSocket.serverRequest(JSON.stringify(unauthorizedUsers));
 }
 
-function sendAuthentication(userData: UserData, type: ResponseAuthenticationList): void {
-  const data = authenticationData(userData, type);
+function sendMessage(receiver: string, msg: string): void {
+  const data: {
+    id: 'MSG_SEND';
+    type: 'MSG_SEND';
+    payload: {
+      message: {
+        to: string;
+        text: string;
+      };
+    };
+  } = {
+    id: 'MSG_SEND',
+    type: 'MSG_SEND',
+    payload: {
+      message: {
+        to: receiver,
+        text: msg,
+      },
+    },
+  };
+  webSocket.serverRequest(JSON.stringify(data));
+}
+
+function sendAuthentication({ name, password }: UserData, type: ResponseAuthenticationList): void {
+  const data: {
+    id: ResponseAuthenticationList;
+    type: ResponseAuthenticationList;
+    payload: {
+      user: {
+        login: string;
+        password: string;
+      };
+    };
+  } = {
+    id: type,
+    type,
+    payload: {
+      user: {
+        login: name,
+        password,
+      },
+    },
+  };
   webSocket.serverRequest(JSON.stringify(data));
 }
 
 function changeMsgToReadStatus(id: string): void {
-  const data: MsgReadRequest = msgRead(id);
+  const data: {
+    id: string;
+    type: 'MSG_READ';
+    payload: {
+      message: {
+        id: string;
+      };
+    };
+  } = {
+    id: 'MSG_READ',
+    type: 'MSG_READ',
+    payload: {
+      message: {
+        id,
+      },
+    },
+  };
   webSocket.serverRequest(JSON.stringify(data));
 }
 

@@ -1,32 +1,4 @@
-import { UserData } from '@alltypes/common';
-import { MsgReadRequest } from '@alltypes/serverRequests';
-import { RequestMsg, RequestUsers, ResponseAuthenticationList } from '@alltypes/serverResponse';
-
-const authenticationData = ({ name, password }: UserData, type: ResponseAuthenticationList) => {
-  return {
-    id: type,
-    type,
-    payload: {
-      user: {
-        login: name,
-        password,
-      },
-    },
-  };
-};
-
-const sendMessageToServer = (message: string, receiver: string): RequestMsg => {
-  return {
-    id: 'MSG_SEND',
-    type: 'MSG_SEND',
-    payload: {
-      message: {
-        to: message,
-        text: receiver,
-      },
-    },
-  };
-};
+import { RequestUsers } from '@alltypes/socketTypes';
 
 const authenticatedUsers: RequestUsers = {
   id: 'USER_ACTIVE',
@@ -40,16 +12,4 @@ const unauthorizedUsers: RequestUsers = {
   payload: null,
 };
 
-const msgRead = (id: string): MsgReadRequest => {
-  return {
-    id: 'MSG_READ',
-    type: 'MSG_READ',
-    payload: {
-      message: {
-        id,
-      },
-    },
-  };
-};
-
-export { authenticationData, authenticatedUsers, unauthorizedUsers, sendMessageToServer, msgRead };
+export { authenticatedUsers, unauthorizedUsers };

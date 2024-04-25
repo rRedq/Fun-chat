@@ -1,7 +1,7 @@
-import { WebSocketResponse } from '@alltypes/serverResponse';
+import { WebSocketResponse } from '@alltypes/socketTypes';
 import { socketEmitter } from '@shared/const';
 import { Modal } from '@components/modal/modal';
-import { logIn, logOut, receiveMessage, sendMessage, messageIsRead } from './socket-responses';
+import { logIn, logOut } from './socket-responses';
 
 export class RemoteServer {
   private webSocket: WebSocket;
@@ -64,14 +64,17 @@ export class RemoteServer {
       socketEmitter.emit('users-get-inactive', { data: response.payload.users });
     } else if (response.type === 'MSG_SEND') {
       if (response.id === 'MSG_SEND') {
-        sendMessage(response);
+        socketEmitter.emit('msg-send', { message: response.payload.message });
       } else {
-        receiveMessage(response);
+        socketEmitter.emit('msg-receive', { message: response.payload.message });
       }
     } else if (response.id === 'MSG_HISTORY') {
       socketEmitter.emit('response-messeges', { messages: response.payload.messages });
     } else if (response.type === 'MSG_READ') {
-      messageIsRead(response);
+      socketEmitter.emit('msg-read', {
+        id: response.payload.message.id,
+        isReaded: response.payload.message.status.isReaded,
+      });
     } else if (response.type === 'USER_EXTERNAL_LOGIN') {
       socketEmitter.emit('user-login', { user: response.payload.user });
     } else if (response.type === 'USER_EXTERNAL_LOGOUT') {

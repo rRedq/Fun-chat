@@ -1,4 +1,4 @@
-import { Message, User } from '@alltypes/serverResponse';
+import { Message, User } from '@alltypes/socketTypes';
 import { changeMsgToReadStatus, getMessageHistoryWithUser, sendMessage } from '../../../web-socket.ts/socket-actions';
 
 export class UserDialogueModel {

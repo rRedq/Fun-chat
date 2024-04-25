@@ -1,23 +1,8 @@
-import {
-  AuthResponse,
-  ReceivedMessage,
-  ResponseError,
-  ResponseMsg,
-  ResponseUsers,
-  MsgReadResponse,
-} from '@alltypes/serverResponse';
+import { AuthResponse, ResponseError, ResponseUsers } from '@alltypes/socketTypes';
 import { socketEmitter } from '@shared/const';
 
 function getUsers(response: ResponseUsers): void {
   socketEmitter.emit('users-get-active', { data: response.payload.users });
-}
-
-function receiveMessage(response: ReceivedMessage): void {
-  socketEmitter.emit('msg-receive', { message: response.payload.message });
-}
-
-function sendMessage(response: ResponseMsg): void {
-  socketEmitter.emit('msg-send', { message: response.payload.message });
 }
 
 function logIn(response: AuthResponse | ResponseError): void {
@@ -36,11 +21,4 @@ function logOut(response: AuthResponse | ResponseError): void {
   }
 }
 
-function messageIsRead(response: MsgReadResponse): void {
-  socketEmitter.emit('msg-read', {
-    id: response.payload.message.id,
-    isReaded: response.payload.message.status.isReaded,
-  });
-}
-
-export { getUsers, receiveMessage, sendMessage, logIn, logOut, messageIsRead };
+export { getUsers, logIn, logOut };
