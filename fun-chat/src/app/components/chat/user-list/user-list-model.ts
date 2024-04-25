@@ -1,5 +1,5 @@
 import { Message, User } from '@alltypes/serverResponse';
-import { getUsers, getMessageHistoryWithUser } from '../../../web-socket.ts/socket-actions';
+import { getMessageHistoryWithUser, getUsers } from '../../../web-socket.ts/socket-actions';
 
 export class UserListModel {
   private usersData: User[] = [];

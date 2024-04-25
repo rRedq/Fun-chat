@@ -49,6 +49,10 @@ export class UserListComtroller extends EventEmitter<UserListEvents> {
     this.subs.push(socketEmitter.subscribe('msg-read', () => getUsers()));
     this.subs.push(socketEmitter.subscribe('msg-receive', () => getUsers()));
     this.subs.push(socketEmitter.subscribe('response-delete-msg', () => getUsers()));
+    const unsubscribe = socketEmitter.subscribe('app-auth-success', () => {
+      getUsers();
+      unsubscribe();
+    });
   }
 
   public getUserListView(): HTMLDivElement {
