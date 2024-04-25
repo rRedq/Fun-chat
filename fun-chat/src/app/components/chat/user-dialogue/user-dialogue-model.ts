@@ -1,5 +1,5 @@
 import { Message, User } from '@alltypes/socketTypes';
-import { changeMsgToReadStatus, getMessageHistoryWithUser, sendMessage } from '../../../web-socket.ts/socket-actions';
+import { changeMsgToReadStatus, getMessageHistoryWithUser, sendMessage } from '../../../web-socket/socket-actions';
 
 export class UserDialogueModel {
   private interlocutor = '';

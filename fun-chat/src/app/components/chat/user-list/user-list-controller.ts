@@ -3,7 +3,7 @@ import { EventEmitter } from '@shared/event-emitter';
 import { socketEmitter } from '@shared/const';
 import { UserListView } from './user-list-view';
 import { UserListModel } from './user-list-model';
-import { getUsers } from '../../../web-socket.ts/socket-actions';
+import { getUsers } from '../../../web-socket/socket-actions';
 
 export class UserListComtroller extends EventEmitter<UserListEvents> {
   private view: UserListView;

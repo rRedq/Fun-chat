@@ -1,6 +1,6 @@
 import { LoginInputNames, UserData } from '@alltypes/common';
 import { getStorage, setStorage } from '@utils/storage';
-import { sendAuthentication } from '../../web-socket.ts/socket-actions';
+import { sendAuthentication } from '../../web-socket/socket-actions';
 
 export class LoginModel {
   private name = '';

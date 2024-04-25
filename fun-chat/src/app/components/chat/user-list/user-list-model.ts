@@ -1,9 +1,7 @@
-import { Message, User } from '@alltypes/serverResponse';
-import { getMessageHistoryWithUser, getUsers } from '../../../web-socket.ts/socket-actions';
+import { Message, User } from '@alltypes/socketTypes';
+import { getMessageHistoryWithUser, getUsers } from '../../../web-socket/socket-actions';
 
 export class UserListModel {
-  private usersData: User[] = [];
-
   private activeUsers: User[] = [];
 
   private inactiveUsers: User[] = [];

@@ -1,5 +1,5 @@
 import { CoreEditMsg, Message } from '@alltypes/socketTypes';
-import { requestDeleteMsg } from '../../../web-socket.ts/socket-actions';
+import { requestDeleteMsg } from '../../../web-socket/socket-actions';
 
 export class MessageModel {
   constructor(private message: Message) {}
