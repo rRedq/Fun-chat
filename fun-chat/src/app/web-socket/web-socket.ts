@@ -1,6 +1,7 @@
 import { WebSocketResponse } from '@alltypes/socketTypes';
 import { socketEmitter } from '@shared/const';
 import { Modal } from '@components/modal/modal';
+import { EnumResponses } from '@alltypes/enum';
 import { logIn, logOut } from './socket-responses';
 
 export class RemoteServer {
@@ -54,40 +55,40 @@ export class RemoteServer {
 
   private serverResponse(event: MessageEvent<string>): void {
     const response: WebSocketResponse = JSON.parse(event.data);
-    if (response.id === 'USER_LOGIN') {
+    if (response.id === EnumResponses.login) {
       logIn(response);
-    } else if (response.type === 'USER_LOGOUT') {
+    } else if (response.type === EnumResponses.logout) {
       logOut(response);
-    } else if (response.type === 'USER_ACTIVE') {
+    } else if (response.type === EnumResponses.active) {
       socketEmitter.emit('users-get-active', { data: response.payload.users });
-    } else if (response.type === 'USER_INACTIVE') {
+    } else if (response.type === EnumResponses.inactive) {
       socketEmitter.emit('users-get-inactive', { data: response.payload.users });
-    } else if (response.type === 'MSG_SEND') {
-      if (response.id === 'MSG_SEND') {
+    } else if (response.type === EnumResponses.send) {
+      if (response.id === EnumResponses.send) {
         socketEmitter.emit('msg-send', { message: response.payload.message });
       } else {
         socketEmitter.emit('msg-receive', { message: response.payload.message });
       }
-    } else if (response.id === 'MSG_HISTORY') {
+    } else if (response.id === EnumResponses.history) {
       socketEmitter.emit('response-messeges', { messages: response.payload.messages });
-    } else if (response.type === 'MSG_READ') {
+    } else if (response.type === EnumResponses.read) {
       socketEmitter.emit('msg-read', {
         id: response.payload.message.id,
         isReaded: response.payload.message.status.isReaded,
       });
-    } else if (response.type === 'USER_EXTERNAL_LOGIN') {
+    } else if (response.type === EnumResponses.externalLogin) {
       socketEmitter.emit('user-login', { user: response.payload.user });
-    } else if (response.type === 'USER_EXTERNAL_LOGOUT') {
+    } else if (response.type === EnumResponses.externalLogout) {
       socketEmitter.emit('user-logout', { user: response.payload.user });
-    } else if (response.type === 'MSG_EDIT') {
+    } else if (response.type === EnumResponses.edit) {
       socketEmitter.emit('response-change-msg', { response: response.payload.message });
-    } else if (response.type === 'MSG_DELETE') {
+    } else if (response.type === EnumResponses.delete) {
       socketEmitter.emit('response-delete-msg', { id: response.payload.message.id });
-    } else if (response.id === 'MSG_COUNT') {
+    } else if (response.id === EnumResponses.count) {
       socketEmitter.emit('response-msg-count', { messages: response.payload.messages });
-    } else if (response.type === 'MSG_DELIVER') {
+    } else if (response.type === EnumResponses.deliver) {
       socketEmitter.emit('response-msg-deliver', { response: response.payload.message });
-    } else if (response.type === 'ERROR') {
+    } else if (response.type === EnumResponses.error) {
       console.error(response.id, response.payload.error);
     }
   }

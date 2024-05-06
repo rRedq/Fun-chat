@@ -4,7 +4,7 @@ import { editMsg } from '@socket/index';
 import { UserDialogueView } from './user-dialogue-view';
 import { UserDialogueModel } from './user-dialogue-model';
 
-export class UserDialogueComtroller {
+export class UserDialogueController {
   private view: UserDialogueView;
 
   private model: UserDialogueModel;
@@ -24,7 +24,7 @@ export class UserDialogueComtroller {
   private setChatSubscribers(): void {
     this.subs.push(
       this.chatEmitter.subscribe('chat-conversation', ({ user }) => {
-        this.view.startDisalogue(user);
+        this.view.startDialogue(user);
         this.model.setInterlocutor(user.login);
       })
     );

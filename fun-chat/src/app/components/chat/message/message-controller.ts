@@ -18,14 +18,14 @@ export class MessageController {
     this.view = new MessageView(this);
     this.model = new MessageModel(message);
     this.setSubscribers();
-    const unsunscribe = socketEmitter.subscribe('response-delete-msg', ({ id }) => {
+    const unsubscribe = socketEmitter.subscribe('response-delete-msg', ({ id }) => {
       if (this.model.isCurrentMessage(id)) {
         this.view.removeMessage();
         callback();
-        unsunscribe();
+        unsubscribe();
       }
     });
-    this.subs.push(unsunscribe);
+    this.subs.push(unsubscribe);
   }
 
   private setSubscribers(): void {

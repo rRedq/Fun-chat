@@ -1,14 +1,15 @@
+import { EnumResponses } from '@alltypes/enum';
 import { RequestUsers } from '@alltypes/socketTypes';
 
 const authenticatedUsers: RequestUsers = {
-  id: 'USER_ACTIVE',
-  type: 'USER_ACTIVE',
+  id: EnumResponses.active,
+  type: EnumResponses.active,
   payload: null,
 };
 
 const unauthorizedUsers: RequestUsers = {
-  id: 'USER_INACTIVE',
-  type: 'USER_INACTIVE',
+  id: EnumResponses.inactive,
+  type: EnumResponses.inactive,
   payload: null,
 };
 

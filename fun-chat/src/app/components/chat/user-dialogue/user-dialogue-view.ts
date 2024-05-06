@@ -52,7 +52,7 @@ export class UserDialogueView {
     this.form.addEventListener('submit', this.submitMessage);
     this.content.addEventListener('click', () => MessageView.removeMenu());
     this.cancelEditBtn.addEventListener('click', this.clearEditState);
-    this.content.addEventListener('click', this.clickMesages);
+    this.content.addEventListener('click', this.clickMessages);
     this.content.addEventListener('wheel', this.scrollMessages);
     this.msg.addEventListener('keyup', () => {
       if (this.msg.value.trim().length > 0) {
@@ -75,7 +75,7 @@ export class UserDialogueView {
       this.chatEmitter.emit('change-msg-success', { id: this.messageId, text: this.msg.value });
       this.clearEditState();
     }
-    this.clearHistoryDevider();
+    this.clearHistoryDivider();
   };
 
   public editMessage(messageId: string, text: string): void {
@@ -86,7 +86,7 @@ export class UserDialogueView {
     }
   }
 
-  public startDisalogue(user: User): void {
+  public startDialogue(user: User): void {
     this.remove();
     this.header.replaceChildren();
     this.msg.disabled = false;
@@ -140,7 +140,7 @@ export class UserDialogueView {
       this.content.firstChild === this.historyDivider ||
       (this.content.children.length === 1 && this.content.lastChild === this.historyDivider)
     ) {
-      this.clearHistoryDevider();
+      this.clearHistoryDivider();
     }
     if (this.content.children.length === 0) {
       this.content.append(this.placeholder);
@@ -163,15 +163,15 @@ export class UserDialogueView {
   private scrollMessages = (): void => {
     if (this.isScroll) {
       this.chatEmitter.emit('chat-change-read-status', { status: true });
-      this.clearHistoryDevider();
+      this.clearHistoryDivider();
       this.isScroll = false;
     }
   };
 
-  private clickMesages = (): void => {
+  private clickMessages = (): void => {
     if (this.isScroll) {
       this.chatEmitter.emit('chat-change-read-status', { status: true });
-      this.clearHistoryDevider();
+      this.clearHistoryDivider();
       this.isScroll = false;
     }
   };
@@ -180,7 +180,7 @@ export class UserDialogueView {
     return this.root;
   }
 
-  private clearHistoryDevider(): void {
+  private clearHistoryDivider(): void {
     this.isHistoryDivider = false;
     this.historyDivider.remove();
     this.content.scrollTop = this.content.scrollHeight;

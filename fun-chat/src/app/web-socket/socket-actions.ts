@@ -1,6 +1,7 @@
 import { serverUrl } from '@shared/const';
 import { UserData } from '@alltypes/common';
 import { ResponseAuthenticationList } from '@alltypes/socketTypes';
+import { EnumResponses } from '@alltypes/enum';
 import { RemoteServer } from './web-socket';
 import { authenticatedUsers, unauthorizedUsers } from './socket-data-containers';
 
@@ -13,8 +14,8 @@ function getUsers(): void {
 
 function sendMessage(receiver: string, msg: string): void {
   const data: {
-    id: 'MSG_SEND';
-    type: 'MSG_SEND';
+    id: EnumResponses.send;
+    type: EnumResponses.send;
     payload: {
       message: {
         to: string;
@@ -22,8 +23,8 @@ function sendMessage(receiver: string, msg: string): void {
       };
     };
   } = {
-    id: 'MSG_SEND',
-    type: 'MSG_SEND',
+    id: EnumResponses.send,
+    type: EnumResponses.send,
     payload: {
       message: {
         to: receiver,
@@ -60,15 +61,15 @@ function sendAuthentication({ name, password }: UserData, type: ResponseAuthenti
 function changeMsgToReadStatus(id: string): void {
   const data: {
     id: string;
-    type: 'MSG_READ';
+    type: EnumResponses.read;
     payload: {
       message: {
         id: string;
       };
     };
   } = {
-    id: 'MSG_READ',
-    type: 'MSG_READ',
+    id: EnumResponses.read,
+    type: EnumResponses.read,
     payload: {
       message: {
         id,
@@ -78,7 +79,10 @@ function changeMsgToReadStatus(id: string): void {
   webSocket.serverRequest(JSON.stringify(data));
 }
 
-const getMessageHistoryWithUser = <T extends 'MSG_COUNT' | 'MSG_HISTORY'>(login: string, type: T): void => {
+const getMessageHistoryWithUser = <T extends EnumResponses.count | EnumResponses.history>(
+  login: string,
+  type: T
+): void => {
   const data: {
     id: T;
     type: 'MSG_FROM_USER';
@@ -101,8 +105,8 @@ const getMessageHistoryWithUser = <T extends 'MSG_COUNT' | 'MSG_HISTORY'>(login:
 
 function editMsg(id: string, text: string): void {
   const data: {
-    id: 'MSG_EDIT';
-    type: 'MSG_EDIT';
+    id: EnumResponses.edit;
+    type: EnumResponses.edit;
     payload: {
       message: {
         id: string;
@@ -110,8 +114,8 @@ function editMsg(id: string, text: string): void {
       };
     };
   } = {
-    id: 'MSG_EDIT',
-    type: 'MSG_EDIT',
+    id: EnumResponses.edit,
+    type: EnumResponses.edit,
     payload: {
       message: {
         id,
@@ -124,16 +128,16 @@ function editMsg(id: string, text: string): void {
 
 const requestDeleteMsg = (id: string): void => {
   const data: {
-    id: 'MSG_DELETE';
-    type: 'MSG_DELETE';
+    id: EnumResponses.delete;
+    type: EnumResponses.delete;
     payload: {
       message: {
         id: string;
       };
     };
   } = {
-    id: 'MSG_DELETE',
-    type: 'MSG_DELETE',
+    id: EnumResponses.delete,
+    type: EnumResponses.delete,
     payload: {
       message: {
         id,

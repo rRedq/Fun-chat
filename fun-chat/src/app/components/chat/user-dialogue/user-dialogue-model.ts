@@ -1,3 +1,4 @@
+import { EnumResponses } from '@alltypes/enum';
 import { Message, User } from '@alltypes/socketTypes';
 import { changeMsgToReadStatus, getMessageHistoryWithUser, sendMessage } from '@socket/index';
 
@@ -38,12 +39,12 @@ export class UserDialogueModel {
   }
 
   public changeReadStatus(status: boolean): void {
-    getMessageHistoryWithUser(this.interlocutor, 'MSG_HISTORY');
+    getMessageHistoryWithUser(this.interlocutor, EnumResponses.history);
     this.changeToRead = status;
   }
 
   public setInterlocutor(interlocutor: string): void {
     this.interlocutor = interlocutor;
-    getMessageHistoryWithUser(this.interlocutor, 'MSG_HISTORY');
+    getMessageHistoryWithUser(this.interlocutor, EnumResponses.history);
   }
 }

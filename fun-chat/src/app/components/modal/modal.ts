@@ -1,3 +1,4 @@
+import { timeToApearModal, timeToDisappearModal } from '@shared/const';
 import './modal.scss';
 import { div } from '@utils/index';
 
@@ -16,13 +17,10 @@ export class Modal {
     this.overlay.append(this.modal);
     document.body.append(this.overlay);
 
-    const timeToApearModal = 10;
-
     setTimeout(() => this.modal.classList.add('modal-active'), timeToApearModal);
   }
 
   public closeModal() {
-    const timeToDisappearModal = 300;
     this.modal.classList.remove('modal-active');
     setTimeout(() => {
       this.modal.remove();

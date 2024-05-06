@@ -17,9 +17,9 @@ export class ChatController extends EventEmitter<ChatEvents> {
     this.userList = new UserListComtroller(userName, this);
     this.dialogue = new UserDialogueComtroller(this, userName);
     this.chatView = new ChatView(header, this.userList.getUserListView(), this.dialogue.getUserListView(), footer);
-    const remove = socketEmitter.subscribe('app-logout-success', () => {
+    const unsubscribe = socketEmitter.subscribe('app-logout-success', () => {
       this.removeChat();
-      remove();
+      unsubscribe();
     });
   }
 

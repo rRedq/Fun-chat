@@ -11,4 +11,8 @@ const storageKey = 'redq-authentication' as const;
 
 const socketEmitter = new EventEmitter<AppEvents>();
 
-export { serverUrl, rssUrl, gitUrl, storageKey, socketEmitter };
+const timeToApearModal = 10;
+
+const timeToDisappearModal = 300;
+
+export { serverUrl, rssUrl, gitUrl, storageKey, socketEmitter, timeToApearModal, timeToDisappearModal };

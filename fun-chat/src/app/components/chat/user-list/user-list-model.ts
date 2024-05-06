@@ -1,3 +1,4 @@
+import { EnumResponses } from '@alltypes/enum';
 import { Message, User } from '@alltypes/socketTypes';
 import { getMessageHistoryWithUser, getUsers } from '@socket/index';
 
@@ -6,7 +7,7 @@ export class UserListModel {
 
   private inactiveUsers: User[] = [];
 
-  private unreadMesages = new Map<string, number>();
+  private unreadMessages = new Map<string, number>();
 
   constructor(private userName: string) {
     getUsers();
@@ -25,8 +26,8 @@ export class UserListModel {
       }
     });
     if (author) {
-      this.unreadMesages.set(author, count);
-      callback([...this.activeUsers, ...this.inactiveUsers], this.unreadMesages);
+      this.unreadMessages.set(author, count);
+      callback([...this.activeUsers, ...this.inactiveUsers], this.unreadMessages);
     }
   }
 
@@ -35,7 +36,7 @@ export class UserListModel {
       if (user.login === this.userName) {
         users.splice(index, 1);
       } else {
-        getMessageHistoryWithUser(user.login, 'MSG_COUNT');
+        getMessageHistoryWithUser(user.login, EnumResponses.count);
       }
     });
 
@@ -54,6 +55,6 @@ export class UserListModel {
         result.push(user);
       }
     });
-    callback(result, this.unreadMesages);
+    callback(result, this.unreadMessages);
   }
 }

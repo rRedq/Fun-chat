@@ -3,6 +3,8 @@ import { Message } from '@alltypes/socketTypes';
 import { div, p, appendChildren } from '@utils/index';
 import { type MessageController } from './message-controller';
 
+type MsgAuthorAndType = { author: string; msgType: string };
+
 export class MessageView {
   private message: HTMLDivElement = div({ className: 'dialogue__cover' });
 
@@ -57,10 +59,7 @@ export class MessageView {
     return this.addMessageToConversation(message, { author, msgType });
   }
 
-  private addMessageToConversation(
-    message: Message,
-    { author, msgType }: { author: string; msgType: string }
-  ): HTMLDivElement {
+  private addMessageToConversation(message: Message, { author, msgType }: MsgAuthorAndType): HTMLDivElement {
     this.text.textContent = message.text;
     const label = div({ className: 'label', textContent: author });
     const time = div({

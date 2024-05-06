@@ -1,3 +1,5 @@
+import { EnumResponses } from './enum';
+
 interface AuthResponse {
   id: ResponseAuthenticationList;
   type: ResponseAuthenticationList;
@@ -22,7 +24,7 @@ interface MsgReadResponse extends MsgReadRequest {
 
 interface UserAuth {
   id: null;
-  type: 'USER_EXTERNAL_LOGOUT' | 'USER_EXTERNAL_LOGIN';
+  type: EnumResponses.externalLogout | EnumResponses.externalLogin;
   payload: {
     user: {
       login: string;
@@ -32,8 +34,8 @@ interface UserAuth {
 }
 
 interface ResponseUsers {
-  id: 'USER_ACTIVE' | 'USER_INACTIVE';
-  type: 'USER_ACTIVE' | 'USER_INACTIVE';
+  id: EnumResponses.active | EnumResponses.inactive;
+  type: EnumResponses.active | EnumResponses.inactive;
   payload: {
     users: User[];
   };
@@ -43,8 +45,8 @@ interface RequestUsers extends Omit<ResponseUsers, 'payload'> {
 }
 
 interface ResponseMsg {
-  id: 'MSG_SEND';
-  type: 'MSG_SEND';
+  id: EnumResponses.send;
+  type: EnumResponses.send;
   payload: {
     message: Message;
   };
@@ -64,8 +66,8 @@ interface Message {
 }
 
 interface EditMsgResponse {
-  id: 'MSG_EDIT';
-  type: 'MSG_EDIT';
+  id: EnumResponses.edit;
+  type: EnumResponses.edit;
   payload: {
     message: {
       id: string;
@@ -89,7 +91,7 @@ interface ReceivedMessage extends Omit<ResponseMsg, 'id'> {
   id: null;
 }
 type MessageHistoryResponse = {
-  id: 'MSG_COUNT' | 'MSG_HISTORY';
+  id: EnumResponses.count | EnumResponses.history;
   type: 'MSG_FROM_USER';
   payload: {
     messages: Message[];
@@ -97,8 +99,8 @@ type MessageHistoryResponse = {
 };
 
 interface ResponseError {
-  id: 'MSG_SEND' | 'USER_ACTIVE' | 'USER_INACTIVE' | 'USER_LOGIN' | 'USER_LOGOUT';
-  type: 'ERROR';
+  id: EnumResponses.send | EnumResponses.active | EnumResponses.inactive | EnumResponses.login | EnumResponses.logout;
+  type: EnumResponses.error;
   payload: {
     error: string;
   };
@@ -110,8 +112,8 @@ type User = {
 };
 
 type ResponseDeleteMsg = {
-  id: 'MSG_DELETE';
-  type: 'MSG_DELETE';
+  id: EnumResponses.delete;
+  type: EnumResponses.delete;
   payload: {
     message: {
       id: string;
@@ -124,7 +126,7 @@ type ResponseDeleteMsg = {
 
 type ResponseMsgDeliver = {
   id: null;
-  type: 'MSG_DELIVER';
+  type: EnumResponses.deliver;
   payload: {
     message: {
       id: string;
@@ -136,8 +138,8 @@ type ResponseMsgDeliver = {
 };
 
 interface MsgReadRequest {
-  id: 'MSG_READ';
-  type: 'MSG_READ';
+  id: EnumResponses.read;
+  type: EnumResponses.read;
   payload: {
     message: {
       id: string;
@@ -158,7 +160,7 @@ type WebSocketResponse =
   | ResponseDeleteMsg
   | ResponseMsgDeliver;
 
-type ResponseAuthenticationList = 'USER_LOGIN' | 'USER_LOGOUT';
+type ResponseAuthenticationList = EnumResponses.login | EnumResponses.logout;
 
 export {
   AuthResponse,

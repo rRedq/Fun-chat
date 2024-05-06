@@ -4,7 +4,7 @@ import { getUsers } from '@socket/index';
 import { UserListView } from './user-list-view';
 import { UserListModel } from './user-list-model';
 
-export class UserListComtroller extends EventEmitter<UserListEvents> {
+export class UserListController extends EventEmitter<UserListEvents> {
   private view: UserListView;
 
   private model: UserListModel;
